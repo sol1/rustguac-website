@@ -1,0 +1,32 @@
+# Screenshots
+
+Fresh captures of rustguac v1.12.1 (the official `sol1/rustguac:1.12.1` image) running against OpenBao in dev mode, with default rustguac branding. All data is fictional: users are `@example.com`, and hosts use `*.example.com`, `*.example.net`, `*.example.internal`, 192.0.2.0/24, 198.51.100.0/24 and 203.0.113.0/24. SSH, web and recording content comes from real sessions to throwaway containers. The session history behind the reports page is a mix of those real sessions and inserted demo rows.
+
+- `dark/` uses the **aurora** theme, which is the default. `light/` uses the **light** theme.
+- Desktop shots are 1440×900, captured at 90% zoom (a 1600×1000 CSS viewport). The reports page is captured at 80% zoom.
+- The editor shots (`connection-editor-*`, `ssh-tunnel`) are 1440×1800. The editor is a scrolling dialog: `ssh-tunnel` is scrolled to the bottom, and the others show the top.
+- `-mobile` shots are 780×1688 (390×844 CSS at DPR 2). rustguac ships no mobile layout or viewport meta tag. `connections`, `sessions`, `admin` and `reports` are shown in a 390px-wide window, so wide tables are cut off at the right edge. `recordings` is shown the way a phone renders it, as the zoomed-out desktop layout.
+- `themes`, `session-ssh` and `session-desktop` are identical in both folders.
+
+| File | Caption | Alt text |
+|---|---|---|
+| connections | The Connections page: folders on the left, the selected folder's entries on the right. | rustguac Connections page with a folder list (Customer: Example Corp, Lab, Network gear, Production, Staging, Windows fleet) and the Production folder open, showing SSH and Web entries with hosts, users and Connect buttons, under a banner saying 5 credentials need setting up. |
+| connections-mobile | Connections in a phone-width window. | rustguac Connections page at phone width, showing the credentials banner and the folder list with entry counts. |
+| connection-editor-rdp | Editing an RDP entry stored in Vault. | rustguac edit dialog for an RDP entry named rds-01: hostname 192.0.2.41, port 3389, credential variables $ad_username and $ad_domain, security, keyboard layout, ignore-certificate option, NLA auth package, KDC URL and monitor count. |
+| connection-editor-web | Editing a Web (browser) entry with autofill and a domain allowlist. | rustguac edit dialog for a Web entry pointing to https://admin.staging.example.com/, with automation credentials, a login-script selector, an autofill rule for sso.example.com and allowed domains admin.staging.example.com and sso.example.com. |
+| connection-editor-vdi | Editing a VDI entry that launches a Docker desktop container. | rustguac edit dialog for a VDI (Docker) entry using image registry.example.com/vdi/xfce-desktop:latest, with a 2-core CPU limit, 4096 MB memory limit, environment variables, optional container credentials and a 120-minute idle timeout. |
+| ssh-tunnel | Routing a connection through two SSH jump hosts. | The SSH tunnel / jump hosts section of a rustguac entry, showing the route You → bastion.example.com → jump-db.example.internal → db-01.example.internal:22, with the first hop expanded to port, username, password, private key and a Verify Host Key button, followed by Save and Cancel. |
+| credentials | My Credentials: per-user values for credential variables, stored in Vault. | rustguac My Credentials dialog with groups AD, CORP and EXAMPLECORP, each listing username, password and domain fields and how many entries use them; saved passwords show as "saved – leave blank to keep". |
+| sessions | Live sessions, with watch and shadow controls for admins. | rustguac Sessions page listing four active sessions (three SSH and one Web) owned by jordan@example.com and sam@example.com, each with watch, shadow and delete actions. |
+| sessions-mobile | Live sessions at phone width. | rustguac Sessions page at phone width, showing the session search, filters, the New ad-hoc session button and the start of the sessions table. |
+| recordings | Session recordings with play, download and MP4 export. | rustguac Recordings page listing twelve SSH and Web recordings by entry, user, folder, size and date, each with play, download, mp4 and delete actions. |
+| recordings-mobile | Recordings on a phone, which renders the desktop layout zoomed out. | rustguac Recordings page as rendered on a phone, with the full recordings table shrunk to fit. |
+| recording-player | Replaying a recorded SSH session in the browser. | rustguac recording player replaying an SSH session running htop, with a Play button, an activity histogram along the seek bar and the position 0:52 of 1:41. |
+| reports | Session reports: totals and searchable session history. | rustguac Reports page with summary cards (203 total sessions, 59.3 total hours, 6 unique users, 4 active now) above a session-history table of users, entries, folders, types, hosts, start times, durations and statuses. |
+| reports-mobile | Reports at phone width. | rustguac Reports page at phone width, with the summary cards stacked above the session-history search. |
+| admin | The admin console: system status and users. | rustguac Admin page with status cards (version v1.12.1, 4 active sessions, 7 users, 203 history rows, 13 recordings, disk usage, Vault connected, features OIDC/Drive/TLS/Vault) and a users table with roles, OIDC groups, status and last login. |
+| admin-mobile | Admin status cards at phone width. | rustguac Admin page at phone width, with the system status cards stacked in a single column. |
+| tokens | Personal API tokens with role caps and expiry. | rustguac Tokens page with a create-token form and four tokens (terraform-ci, ansible-inventory, laptop-cli, reporting-export) showing max role, expiry, created and last-used dates. |
+| themes | The same Connections page in four built-in themes. | Four-up view of the rustguac Connections page in the aurora, light, nord and jaguar themes. |
+| session-ssh | A live SSH session in the rustguac web client. | A browser-based SSH session through rustguac running htop on a demo host, with processes such as api-server, queue-worker and sshd, and the Clipboard, Files and Controls side tabs at the left edge. |
+| session-desktop | A live Web session: Chromium streamed into the browser. | A rustguac Web session showing a fictional Example Corp service status page with uptime, latency and per-service status, and the Clipboard and Controls side tabs at the left edge. |

@@ -1,0 +1,44 @@
+import { href } from "../site.mjs";
+import { icon } from "../icons.mjs";
+import { searchTrigger } from "../layout.mjs";
+
+// Served for every unknown URL, at any depth, so every link here is absolute and
+// base-prefixed (href() does that).
+const body = `
+<section class="not-found">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="container narrow">
+    <div class="nf-term" aria-hidden="true">
+      <div class="nf-line"><span class="nf-p">$</span> rustguac connect <span class="nf-arg">--path</span> <span class="nf-s">"this-page"</span></div>
+      <div class="nf-line nf-err">error: session ended: target not found (404)</div>
+      <div class="nf-line"><span class="nf-p">$</span> <span class="caret"></span></div>
+    </div>
+    <h1>Session ended: page not found</h1>
+    <p class="page-lead">That page doesn't exist. It may have moved, or the link may be mistyped. Reconnect from one of these:</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary btn-lg" href="${href("/")}">${icon("arrow-right", 18)}<span>Home</span></a>
+      <a class="btn btn-ghost btn-lg" href="${href("/docs/")}">${icon("book", 18)}<span>Docs</span></a>
+      <a class="btn btn-ghost btn-lg" href="${href("/features/")}">${icon("layers", 18)}<span>Features</span></a>
+    </div>
+    <div class="nf-search">${searchTrigger("search-trigger-lg")}</div>
+  </div>
+</section>
+`;
+
+export default {
+  slug: "404",
+  path: "/404.html",
+  file: "404.html",
+  title: "Page not found | rustguac",
+  description: "This page doesn't exist. Head back to the rustguac home page, the documentation or the feature overview, or search the site.",
+  noindex: true,
+  sitemap: false,
+  search: false,
+  og: {
+    eyebrow: "404",
+    title: "This page took a <em>wrong hop</em>",
+    sub: "The page you were looking for is not here. The docs, features and FAQ are one click away.",
+    shot: "ssh-tunnel",
+  },
+  body,
+};

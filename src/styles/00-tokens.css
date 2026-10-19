@@ -1,0 +1,157 @@
+/* ==========================================================================
+   rustguac website: design tokens
+   Brand (UPSTREAM static/logo.svg): avocado teal #5bc0be, deep navy #1a1a2e,
+   prompt red #e94560. Dark is the default; <html data-theme="dark|light"> is
+   set before first paint. Every other stylesheet (docs, search) uses ONLY the
+   tokens below.
+   ========================================================================== */
+
+/* ---------- Fonts (self-hosted, SIL OFL) with metric-matched fallbacks ---------- */
+/* URLs are relative to assets/css/, so the site works under any base path. */
+@font-face {
+  font-family: "Inter";
+  src: url("../fonts/inter-latin.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: optional; /* preloaded; never swaps late, so headings never reflow */
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  src: url("../fonts/jetbrains-mono-latin.woff2") format("woff2");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial"), local("Helvetica"), local("Liberation Sans"), local("Roboto");
+  size-adjust: 107.1%;
+  ascent-override: 90.4%;
+  descent-override: 22.5%;
+  line-gap-override: 0%;
+}
+
+/* ---------- Dark (default) ---------- */
+:root {
+  /* Brand constants (decorative; not theme-dependent) */
+  --brand-teal: #5bc0be;
+  --brand-navy: #1a1a2e;
+  --brand-red: #e94560;
+
+  --bg: #0a0c16;
+  --bg-elev: #10132a;
+  --bg-soft: #0d1020;
+  --bg-inset: #070912;
+  --border: #1d2241;
+  --border-strong: #2b3259;
+
+  --text: #e8ebf5;
+  --text-muted: #a5abc6;
+  --text-faint: #8088a8;
+
+  --accent: #5bc0be;
+  --accent-strong: #84dcd9;
+  --accent-soft: rgba(91, 192, 190, 0.12);
+  --accent-contrast: #04201f;
+
+  --danger: #ff6b81;
+  --warn: #f2b85b;
+  --ok: #52d28f;
+
+  --code-bg: #0c0f1f;
+  --code-text: #d8ddf0;
+  --t-k: #8fb4ff;
+  --t-s: #e9c27f;
+  --t-c: #737c9c;
+  --t-v: #6fd0cd;
+  --t-x: #ff7d93;
+  --t-n: #f4a172;
+  --t-p: #8d95b8;
+
+  --font-sans: "Inter", "Inter Fallback", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 1px 0 0 rgba(255, 255, 255, 0.03) inset, 0 8px 20px -14px rgba(0, 0, 0, 0.8);
+  --shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset, 0 22px 44px -28px rgba(0, 0, 0, 0.9);
+  --shadow-lg: 0 40px 100px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.03);
+
+  --header-h: 64px;
+  --container: 1200px;
+  --gutter: clamp(16px, 4vw, 28px);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Decorative helpers (CORE only) */
+  --glow-a: rgba(91, 192, 190, 0.2);
+  --glow-b: rgba(233, 69, 96, 0.09);
+  --grid-line: rgba(160, 175, 230, 0.05);
+  --header-bg: rgba(10, 12, 22, 0.74);
+  --card-hover: #141832;
+  color-scheme: dark;
+}
+
+/* ---------- Light ---------- */
+html[data-theme="light"] {
+  --bg: #fbfcfe;
+  --bg-elev: #ffffff;
+  --bg-soft: #f3f5fa;
+  --bg-inset: #eceff6;
+  --border: #e0e4ee;
+  --border-strong: #c8cede;
+
+  --text: #10132a;
+  --text-muted: #464d6d;
+  --text-faint: #5a6182;
+
+  --accent: #1b7c79;
+  --accent-strong: #125c5a;
+  --accent-soft: rgba(27, 124, 121, 0.09);
+  --accent-contrast: #ffffff;
+
+  --danger: #c4223f;
+  --warn: #9a5a00;
+  --ok: #18794a;
+
+  --code-bg: #f4f6fb;
+  --code-text: #1b2040;
+  --t-k: #3451c7;
+  --t-s: #8f5200;
+  --t-c: #676e8f;
+  --t-v: #0d6d6a;
+  --t-x: #bd2340;
+  --t-n: #a8430c;
+  --t-p: #565e80;
+
+  --shadow-sm: 0 1px 2px rgba(16, 24, 48, 0.05), 0 6px 16px -12px rgba(16, 24, 48, 0.18);
+  --shadow: 0 1px 2px rgba(16, 24, 48, 0.04), 0 18px 36px -24px rgba(16, 24, 48, 0.22);
+  --shadow-lg: 0 40px 90px -36px rgba(20, 40, 80, 0.32), 0 0 0 1px rgba(16, 24, 48, 0.04);
+
+  --glow-a: rgba(27, 124, 121, 0.13);
+  --glow-b: rgba(233, 69, 96, 0.06);
+  --grid-line: rgba(16, 19, 42, 0.05);
+  --header-bg: rgba(251, 252, 254, 0.8);
+  --card-hover: #fdfefe;
+  color-scheme: light;
+}
+
+/* Without JS, follow the OS preference. */
+@media (prefers-color-scheme: light) {
+  html.no-js {
+    --bg: #fbfcfe; --bg-elev: #ffffff; --bg-soft: #f3f5fa; --bg-inset: #eceff6;
+    --border: #e0e4ee; --border-strong: #c8cede;
+    --text: #10132a; --text-muted: #464d6d; --text-faint: #5a6182;
+    --accent: #1b7c79; --accent-strong: #125c5a; --accent-soft: rgba(27, 124, 121, 0.09); --accent-contrast: #ffffff;
+    --danger: #c4223f; --warn: #9a5a00; --ok: #18794a;
+    --code-bg: #f4f6fb; --code-text: #1b2040;
+    --t-k: #3451c7; --t-s: #8f5200; --t-c: #676e8f; --t-v: #0d6d6a; --t-x: #bd2340; --t-n: #a8430c; --t-p: #565e80;
+    --shadow-sm: 0 6px 16px -12px rgba(16, 24, 48, 0.18); --shadow: 0 18px 36px -24px rgba(16, 24, 48, 0.22);
+    --shadow-lg: 0 40px 90px -36px rgba(20, 40, 80, 0.32);
+    --glow-a: rgba(27, 124, 121, 0.13); --glow-b: rgba(233, 69, 96, 0.06); --grid-line: rgba(16, 19, 42, 0.05);
+    --header-bg: rgba(251, 252, 254, 0.8); --card-hover: #fdfefe;
+    color-scheme: light;
+  }
+  html.no-js .shot-dark { display: none !important; }
+  html.no-js .shot-light { display: block !important; }
+}

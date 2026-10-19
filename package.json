@@ -1,0 +1,20 @@
+{
+  "name": "rustguac-website",
+  "private": true,
+  "description": "Source for the rustguac community website: marketing pages, docs and search, built as a static site for GitHub Pages.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs && node scripts/check.mjs && npx --yes html-validate@9 \"dist/**/*.html\"",
+    "check:base": "SITE_URL=http://127.0.0.1:8080/rustguac-website node scripts/build.mjs && node scripts/check.mjs",
+    "dev": "node scripts/dev.mjs",
+    "serve": "node scripts/build.mjs && node scripts/serve.mjs",
+    "serve:base": "SITE_URL=http://127.0.0.1:8080/rustguac-website node scripts/build.mjs && node scripts/serve.mjs",
+    "media": "node scripts/build-media.mjs",
+    "sync-docs": "node scripts/sync-docs.mjs"
+  }
+}

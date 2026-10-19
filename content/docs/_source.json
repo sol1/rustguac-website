@@ -1,0 +1,82 @@
+{
+  "repo": "sol1/rustguac",
+  "ref": "v1.12.1",
+  "commit": "bc9e8c60175f763da525729b28609b3e3e86cf31",
+  "version": "1.12.1",
+  "releaseDate": "2026-10-19T02:54:18Z",
+  "syncedAt": "2026-10-19T05:34:25.950Z",
+  "files": {
+    "api.md": {
+      "modified": "2026-10-19T02:22:57Z",
+      "sha256": "a62c6c17eda61457"
+    },
+    "configuration.md": {
+      "modified": "2026-10-18T02:23:14Z",
+      "sha256": "02998de112be25b7"
+    },
+    "credential-variables.md": {
+      "modified": "2026-10-16T22:53:48Z",
+      "sha256": "39a97da0874b9404"
+    },
+    "deployment-guide.md": {
+      "modified": "2026-09-19T04:42:45Z",
+      "sha256": "983de5462916b05b"
+    },
+    "installation.md": {
+      "modified": "2026-07-22T23:38:56Z",
+      "sha256": "01554ed137ad9960"
+    },
+    "integrations.md": {
+      "modified": "2026-10-18T02:23:14Z",
+      "sha256": "2f34d8ad8de2e96d"
+    },
+    "migration.md": {
+      "modified": "2026-10-16T22:50:49Z",
+      "sha256": "438b433b09f8e5fa"
+    },
+    "netbox.md": {
+      "modified": "2026-10-16T20:59:00Z",
+      "sha256": "331a9920b1cae2d3"
+    },
+    "overview.md": {
+      "modified": "2026-10-09T02:47:23Z",
+      "sha256": "146ad3744071e781"
+    },
+    "rdp-h264.md": {
+      "modified": "2026-08-26T23:27:33Z",
+      "sha256": "31ec16067bbeedf0"
+    },
+    "rdp-video-performance.md": {
+      "modified": "2026-08-26T23:27:33Z",
+      "sha256": "86a14dc10762f22e"
+    },
+    "reports.md": {
+      "modified": "2026-10-03T01:57:23Z",
+      "sha256": "6103f7606de1382a"
+    },
+    "reverse-proxies.md": {
+      "modified": "2026-10-17T02:46:27Z",
+      "sha256": "20fb15af893d19b5"
+    },
+    "roles-and-access-control.md": {
+      "modified": "2026-10-18T02:23:14Z",
+      "sha256": "57abd16ae4414ed9"
+    },
+    "security.md": {
+      "modified": "2026-10-19T02:22:57Z",
+      "sha256": "f3712151b0cfe254"
+    },
+    "themes.md": {
+      "modified": "2026-05-29T00:57:46Z",
+      "sha256": "26cf2f1ec083f571"
+    },
+    "vdi.md": {
+      "modified": "2026-05-20T08:52:22Z",
+      "sha256": "f44e973b78b50767"
+    },
+    "web-sessions.md": {
+      "modified": "2026-06-09T06:25:25Z",
+      "sha256": "9a0cef8daf586e2a"
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "admin": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "connection-editor-rdp": {
+    "width": 1440,
+    "height": 1800,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "connection-editor-vdi": {
+    "width": 1440,
+    "height": 1800,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "connection-editor-web": {
+    "width": 1440,
+    "height": 1800,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "connections": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "credentials": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "recording-player": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "recordings": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "reports": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "session-desktop": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "session-ssh": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "sessions": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "ssh-tunnel": {
+    "width": 1440,
+    "height": 1800,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "themes": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "tokens": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  }
+}
