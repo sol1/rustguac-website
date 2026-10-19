@@ -172,8 +172,8 @@ function sidebar(current) {
     })
     .join("\n");
   return `<aside class="docs-sidebar" id="docs-sidebar" aria-label="Documentation" data-search-ignore>
-<div class="docs-drawer-head"><span>Documentation</span><button type="button" class="icon-btn" data-docs-close aria-label="Close menu">${icon("x", 18)}</button></div>
 <div class="docs-sidebar-scroll">
+<nav class="docs-sitenav" aria-label="Site">${site.nav.map((n) => `<a href="${href(n.href)}"${n.href === "/docs/" ? ' class="is-current"' : ""}>${n.label}</a>`).join("")}</nav>
 <a class="docs-nav-home${current ? "" : ' is-current" aria-current="page'}" href="${href("/docs/")}">${icon("book", 16)}<span>Docs home</span></a>
 <nav class="docs-nav" aria-label="Docs sections">
 ${groups}
@@ -217,13 +217,6 @@ function pager(i) {
   return `<nav class="docs-pager" aria-label="Previous and next page" data-search-ignore>${card(prev, "prev")}${card(next, "next")}</nav>`;
 }
 
-const mobileBar = (label) =>
-  `<div class="docs-mobilebar" data-search-ignore>
-<button type="button" class="docs-menu-btn" data-docs-menu aria-controls="docs-sidebar" aria-expanded="false">${icon("menu", 18)}<span>Menu</span></button>
-<a class="docs-menu-link" href="#docs-sidebar">${icon("menu", 18)}<span>All docs</span></a>
-<span class="docs-mobilebar-label">${label}</span>
-</div>`;
-
 /* ---------------------------------------------------------------- doc pages */
 
 const docPagesList = rendered.map((r, i) => {
@@ -243,9 +236,7 @@ const docPagesList = rendered.map((r, i) => {
   const issue = issueUrl(r.title, path);
 
   const body = `<div class="docs-shell" data-docs>
-${mobileBar(`${esc(r.section.title)} <span aria-hidden="true">›</span> ${esc(r.title)}`)}
 ${sidebar(r.slug)}
-<div class="docs-scrim" data-docs-scrim hidden></div>
 <article class="docs-article" aria-labelledby="${esc(r.titleId || "doc-title")}">
 <nav class="docs-crumbs" aria-label="Breadcrumb" data-search-ignore><ol>
 <li><a href="${href("/docs/")}">Docs</a>${icon("chevron-right", 14)}</li>
@@ -303,6 +294,8 @@ ${toc ? `<aside class="docs-toc" aria-label="On this page" data-search-ignore>
     h1: r.title,
     headline: r.title,
     layout: "docs",
+    // The header menu button opens the docs sidebar instead of the site menu.
+    docsNav: true,
     section: r.section.title,
     searchSection: `Docs › ${r.section.title}`,
     breadcrumbs: [

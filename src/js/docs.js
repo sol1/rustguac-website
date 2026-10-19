@@ -1,4 +1,4 @@
-/* rustguac docs: sidebar drawer, remembered nav groups, TOC scrollspy, copy
+/* rustguac docs: mobile sidebar panel, remembered nav groups, TOC scrollspy, copy
    fallback. Progressive enhancement only: every docs page is fully readable and
    navigable without this file. */
 (function () {
@@ -15,62 +15,36 @@
   };
   var reduceMotion = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ---------- Sidebar drawer (mobile) ---------- */
+  /* ---------- Sidebar panel (mobile) ---------- */
+  // Below 1081px the header's menu button (data-docs-menu) opens the docs sidebar
+  // as a full-height panel under the header, in place of the site's mobile menu.
   var sidebar = $("#docs-sidebar");
   var menuBtn = $("[data-docs-menu]");
-  var scrim = $("[data-docs-scrim]");
-  var closeBtn = $("[data-docs-close]");
-  var desktop = window.matchMedia ? matchMedia("(min-width: 1024px)") : { matches: true };
-  var lastFocus = null;
+  var desktop = window.matchMedia ? matchMedia("(min-width: 1081px)") : { matches: true };
 
-  function focusables() {
-    return $$('a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])', sidebar)
-      .filter(function (el) { return el.offsetParent !== null || el === closeBtn; });
-  }
-  function openDrawer() {
-    if (!sidebar || desktop.matches) return;
-    lastFocus = d.activeElement;
-    shell.classList.add("is-drawer-open");
-    root.classList.add("docs-drawer-open");
-    if (scrim) scrim.hidden = false;
-    if (menuBtn) menuBtn.setAttribute("aria-expanded", "true");
-    sidebar.setAttribute("role", "dialog");
-    sidebar.setAttribute("aria-modal", "true");
-    scrollCurrentIntoView();
-    setTimeout(function () { (closeBtn || focusables()[0] || sidebar).focus(); }, reduceMotion ? 0 : 60);
-    d.addEventListener("keydown", onDrawerKey);
-  }
-  function closeDrawer(restore) {
-    if (!shell.classList.contains("is-drawer-open")) return;
-    shell.classList.remove("is-drawer-open");
-    root.classList.remove("docs-drawer-open");
-    if (scrim) scrim.hidden = true;
-    if (menuBtn) menuBtn.setAttribute("aria-expanded", "false");
-    sidebar.removeAttribute("role");
-    sidebar.removeAttribute("aria-modal");
-    d.removeEventListener("keydown", onDrawerKey);
-    if (restore !== false && lastFocus && lastFocus.focus) lastFocus.focus();
-  }
-  function onDrawerKey(e) {
-    if (e.key === "Escape") { e.preventDefault(); closeDrawer(); return; }
-    if (e.key !== "Tab") return;
-    var f = focusables();
-    if (!f.length) return;
-    var first = f[0], last = f[f.length - 1];
-    if (e.shiftKey && (d.activeElement === first || !sidebar.contains(d.activeElement))) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && (d.activeElement === last || !sidebar.contains(d.activeElement))) { e.preventDefault(); first.focus(); }
+  function isOpen() { return shell.classList.contains("is-drawer-open"); }
+  function setDrawer(open) {
+    if (open && desktop.matches) return;
+    shell.classList.toggle("is-drawer-open", open);
+    d.body.classList.toggle("menu-open", open);
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close docs menu" : "Open docs menu");
+    if (open) scrollCurrentIntoView();
   }
   if (menuBtn && sidebar) {
-    menuBtn.addEventListener("click", function () {
-      shell.classList.contains("is-drawer-open") ? closeDrawer() : openDrawer();
-    });
-    if (closeBtn) closeBtn.addEventListener("click", function () { closeDrawer(); });
-    if (scrim) scrim.addEventListener("click", function () { closeDrawer(); });
+    menuBtn.setAttribute("aria-label", "Open docs menu");
+    menuBtn.addEventListener("click", function () { setDrawer(!isOpen()); });
     sidebar.addEventListener("click", function (e) {
-      var a = e.target.closest && e.target.closest("a[href]");
-      if (a && shell.classList.contains("is-drawer-open")) closeDrawer(false);
+      if (isOpen() && e.target.closest && e.target.closest("a[href]")) setDrawer(false);
     });
-    var onMq = function () { if (desktop.matches) closeDrawer(false); };
+    d.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && isOpen()) { setDrawer(false); menuBtn.focus(); }
+    });
+    // The search trigger opens a dialog: close the panel first.
+    d.addEventListener("click", function (e) {
+      if (isOpen() && e.target.closest && e.target.closest("[data-search-open]")) setDrawer(false);
+    }, true);
+    var onMq = function () { if (desktop.matches) setDrawer(false); };
     if (desktop.addEventListener) desktop.addEventListener("change", onMq);
     else if (desktop.addListener) desktop.addListener(onMq);
   }

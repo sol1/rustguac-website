@@ -186,10 +186,10 @@ function header(page) {
       <a class="release-pill hide-md" href="${site.release}" rel="noopener" title="Release notes for v${site.version}"><span class="pulse" aria-hidden="true"></span>v${site.version}</a>
       <a class="icon-btn hide-sm" href="${site.repo}" rel="noopener" aria-label="rustguac on GitHub" title="rustguac on GitHub">${githubMark(18)}</a>
       <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme" title="Toggle theme">${icon("sun", 18, "i-sun")}${icon("moon", 18, "i-moon")}</button>
-      <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">${icon("menu", 20, "i-menu")}${icon("x", 20, "i-close")}</button>
+      <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" ${page.docsNav ? 'aria-controls="docs-sidebar" data-docs-menu' : 'aria-controls="mobileNav"'}>${icon("menu", 20, "i-menu")}${icon("x", 20, "i-close")}</button>
     </div>
   </div>
-  <div class="mobile-nav" id="mobileNav" hidden>
+  ${page.docsNav ? "" : `<div class="mobile-nav" id="mobileNav" hidden>
     <nav class="container" aria-label="Mobile">
       ${site.nav.map((n) => `<a href="${href(n.href)}"${isCurrent(n.href, page) ? ' aria-current="page"' : ""}>${n.label}${icon("chevron-right", 18)}</a>`).join("")}
       <div class="mobile-cta">
@@ -198,7 +198,7 @@ function header(page) {
       </div>
       <p class="mobile-release"><a href="${site.release}" rel="noopener"><span class="pulse" aria-hidden="true"></span>Latest release: v${site.version}</a></p>
     </nav>
-  </div>
+  </div>`}
 </header>`;
 }
 

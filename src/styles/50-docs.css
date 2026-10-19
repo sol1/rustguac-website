@@ -11,8 +11,7 @@ html[data-theme] :is(.docs-nav, .docs-crumbs, .docs-toc, .docs-toc-mobile, .docs
   text-decoration: none;
 }
 .docs-shell {
-  --docs-bar-h: 0px;
-  --docs-top: calc(var(--header-h) + var(--docs-bar-h));
+  --docs-top: var(--header-h);
   display: grid;
   grid-template-columns: 272px minmax(0, 1fr);
   gap: 0 clamp(32px, 4vw, 56px);
@@ -42,7 +41,7 @@ html[data-theme] :is(.docs-nav, .docs-crumbs, .docs-toc, .docs-toc-mobile, .docs
   padding: 24px 18px 24px var(--gutter);
   scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
 }
-.docs-drawer-head { display: none; }
+.docs-sitenav { display: none; }
 .docs-nav-home {
   display: flex; align-items: center; gap: 10px;
   padding: 8px 10px; margin-bottom: 14px; border-radius: var(--radius-sm);
@@ -96,10 +95,6 @@ html[data-theme] .docs-nav-group li a[aria-current="page"] {
 }
 html[data-theme] .docs-sidebar-foot a { display: inline-flex; align-items: center; gap: 8px; color: var(--text-faint); }
 html[data-theme] .docs-sidebar-foot a:hover { color: var(--text); }
-.docs-scrim { display: none; }
-
-/* ---------- Mobile bar ---------- */
-.docs-mobilebar { display: none; }
 
 /* ---------- Article header ---------- */
 .docs-crumbs ol {
@@ -346,64 +341,46 @@ html[data-theme] .docs-toc-mobile ol ol a { padding-left: 16px; font-size: 0.84r
 html[data-theme] .docs-toc-mobile a:hover, html[data-theme] .docs-toc-mobile a.is-active { color: var(--accent-strong); }
 html[data-theme="light"] .docs-toc-mobile a:hover, html[data-theme="light"] .docs-toc-mobile a.is-active { color: var(--accent-strong); }
 
-/* ---------- Below 1024px: mobile bar + drawer ---------- */
-@media (max-width: 1023.98px) {
-  .docs-shell { --docs-bar-h: 49px; grid-template-columns: minmax(0, 1fr); gap: 0; }
+/* ---------- Up to 1080px: the header menu button opens the sidebar ----------
+   Same breakpoint as the site header's own menu (20-chrome.css), so there is only
+   ever one menu button. With JS the sidebar becomes a full-height panel under the
+   header, like .mobile-nav; without JS it is a normal block after the article. */
+@media (max-width: 1080px) {
+  .docs-shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .docs-article { padding-top: 22px; }
-  .docs-mobilebar {
-    position: sticky; top: var(--header-h); z-index: 60;
-    display: flex; align-items: center; gap: 12px;
-    height: var(--docs-bar-h);
-    margin: 0 calc(-1 * max(var(--gutter), env(safe-area-inset-left)));
-    padding: 0 max(var(--gutter), env(safe-area-inset-left));
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-  }
-  .docs-menu-btn, .docs-menu-link {
-    display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
-    min-height: 34px; padding: 0 12px 0 10px; border-radius: var(--radius-sm);
-    border: 1px solid var(--border); background: var(--bg-elev); color: var(--text);
-    font-size: 0.88rem; font-weight: 600; cursor: pointer;
-  }
-  .docs-menu-btn:hover, .docs-menu-link:hover { border-color: var(--border-strong); }
-  .js .docs-menu-link, .no-js .docs-menu-btn { display: none; }
-  .docs-mobilebar-label { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: 0.86rem; color: var(--text-faint); }
 
-  /* Drawer (JS) */
+  .docs-sitenav {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin: 0 0 16px; padding: 0 0 16px; border-bottom: 1px solid var(--border);
+  }
+  html[data-theme] .docs-sitenav a {
+    display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px;
+    border: 1px solid var(--border); border-radius: 999px; background: var(--bg-elev);
+    font-size: 0.88rem; font-weight: 600; color: var(--text-muted); text-decoration: none;
+  }
+  html[data-theme] .docs-sitenav a.is-current { color: var(--accent-strong); border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+
   .js .docs-sidebar {
-    position: fixed; z-index: 210; top: 0; bottom: 0; left: 0;
-    width: min(86vw, 340px); height: auto; margin: 0;
-    background: var(--bg-elev); border-right: 1px solid var(--border); box-shadow: var(--shadow-lg);
-    transform: translateX(-102%); visibility: hidden;
-    transition: transform 0.28s var(--ease), visibility 0s linear 0.28s;
-    padding-top: env(safe-area-inset-top);
+    /* Fixed, so the sticky sidebar's align-self: start must not shrink it to its content. */
+    position: fixed; z-index: 99; inset: calc(var(--header-h) + env(safe-area-inset-top)) 0 0 0;
+    align-self: stretch; width: auto; height: auto; margin: 0; border: 0;
+    background: var(--bg);
+    opacity: 0; transform: translateY(-6px); visibility: hidden;
+    transition: opacity 0.2s var(--ease), transform 0.22s var(--ease), visibility 0s linear 0.22s;
   }
-  .js .is-drawer-open .docs-sidebar { transform: none; visibility: visible; transition: transform 0.28s var(--ease), visibility 0s; }
-  .js .docs-drawer-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 12px 12px 20px; border-bottom: 1px solid var(--border);
-    font-weight: 700; color: var(--text);
+  .js .is-drawer-open .docs-sidebar { opacity: 1; transform: none; visibility: visible; transition: opacity 0.2s var(--ease), transform 0.22s var(--ease), visibility 0s; }
+  .js .docs-sidebar-scroll {
+    width: 100%; max-width: 720px; margin: 0 auto;
+    padding: 16px max(var(--gutter), env(safe-area-inset-right)) max(32px, env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left));
   }
-  .js .docs-sidebar-scroll { padding: 16px 16px max(24px, env(safe-area-inset-bottom)) 16px; }
-  .js .docs-scrim {
-    display: block; position: fixed; inset: 0; z-index: 205;
-    background: color-mix(in srgb, var(--bg-inset) 62%, transparent);
-    -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
-    animation: docs-fade 0.2s var(--ease);
-  }
-  .js .docs-scrim[hidden] { display: none; }
-  html.docs-drawer-open, html.docs-drawer-open body { overflow: hidden; }
 
-  /* No JS: the sidebar becomes a normal block after the article. */
   .no-js .docs-sidebar {
     position: static; order: 3; height: auto; margin: 0 0 40px; border: 1px solid var(--border);
-    border-radius: var(--radius); scroll-margin-top: calc(var(--header-h) + 60px);
+    border-radius: var(--radius); scroll-margin-top: calc(var(--header-h) + 20px);
   }
   .no-js .docs-sidebar-scroll { padding: 16px; }
   .no-js .docs-article { order: 2; }
-  .no-js .docs-mobilebar { order: 1; }
 }
-@keyframes docs-fade { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 640px) {
   .docs-article { padding-bottom: 48px; }
@@ -567,10 +544,10 @@ html[data-theme] .docs-popular a:hover { background: var(--bg-soft); color: var(
 
 /* ---------- Motion & print ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .docs-sidebar, .docs-card, .docs-step, .docs-pager-card, .docs-nav-chevron, .docs-toc-chevron, .js .docs-scrim { transition: none !important; animation: none !important; }
+  .docs-sidebar, .docs-card, .docs-step, .docs-pager-card, .docs-nav-chevron, .docs-toc-chevron { transition: none !important; animation: none !important; }
 }
 @media print {
-  .docs-sidebar, .docs-toc, .docs-toc-mobile, .docs-mobilebar, .docs-feedback, .docs-pager, .heading-anchor, .code-head .copy-btn { display: none !important; }
+  .docs-sidebar, .docs-toc, .docs-toc-mobile, .docs-feedback, .docs-pager, .heading-anchor, .code-head .copy-btn { display: none !important; }
   .docs-shell { display: block; max-width: none; padding: 0; }
   .docs-article { max-width: none; padding: 0; }
   .code-block, .callout, .doc-content .table-wrap { break-inside: avoid; box-shadow: none; }
