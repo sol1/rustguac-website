@@ -93,9 +93,10 @@ export const protocols = [
     name: "VNC",
     text: "Connect to any VNC server: KVM and IPMI consoles, existing remote desktops and virtual machine displays.",
     bullets: [
-      "Password auth, plus username and password for VeNCrypt, RealVNC and macOS Screen Sharing",
+      "Password auth, VeNCrypt and macOS Screen Sharing logins, and UltraVNC's Windows login for Active Directory accounts",
+      "Network presets for LAN, WAN and slow links set the encodings, compression and JPEG quality",
       "Per-entry clipboard copy and paste control",
-      "Scales the remote screen to the window, or resizes servers with their own virtual screen",
+      "Fits the remote screen to the window or shows it at actual size with scroll bars, or resizes servers with their own virtual screen",
       "Reachable through multi-hop SSH tunnels",
     ],
   },
