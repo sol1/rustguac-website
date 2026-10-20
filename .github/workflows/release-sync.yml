@@ -11,6 +11,10 @@ name: Sync rustguac release
 #
 # A run with no new release changes nothing: it stops once it sees the site is
 # already on the latest tag, or that the release branch (and its pull request) exists.
+#
+# NOTIFY is who hears about it: they are assigned and asked to review each sync pull
+# request, and a failed run opens an issue assigned to them (one at a time, so an
+# hourly failure does not open an issue every hour).
 
 on:
   schedule:
@@ -24,6 +28,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  issues: write
 
 concurrency:
   group: release-sync
@@ -35,6 +40,7 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       UPSTREAM: sol1/rustguac
+      NOTIFY: davekempe,jseifeddine
     steps:
       - uses: actions/checkout@v7
 
@@ -124,4 +130,19 @@ jobs:
           git add content/docs
           git commit -m "docs: sync rustguac $TAG"
           git push -u origin "$BRANCH"
-          gh pr create --base main --head "$BRANCH" --title "Sync rustguac $TAG" --body-file pr-body.md
+          gh pr create --base main --head "$BRANCH" --title "Sync rustguac $TAG" --body-file pr-body.md \
+            --assignee "$NOTIFY" --reviewer "$NOTIFY"
+
+      - name: Open an issue if the sync failed
+        if: failure()
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Release sync failed"
+          open="$(gh issue list -R "$GITHUB_REPOSITORY" --state open --search "in:title \"$title\"" --json number --jq '.[0].number // empty')"
+          if [ -n "$open" ]; then
+            echo "Issue #$open is already open for a failed sync."
+          else
+            gh issue create -R "$GITHUB_REPOSITORY" --title "$title" --assignee "$NOTIFY" \
+              --body "The release sync failed in [run $GITHUB_RUN_ID]($RUN_URL). Fix the cause, re-run it from the Actions tab (or wait for the next hourly run), then close this issue."
+          fi
