@@ -380,7 +380,8 @@ const supportSection = `
     <div class="support-text">
       <p class="eyebrow">Commercial support</p>
       <h2 id="support-title">Backed by the team that builds it</h2>
-      <p class="support-lead">rustguac is developed by ${m.name}, a Sydney IT services company, and commercial support for rustguac is available directly from them.</p>
+      <p class="live-badge"><span class="live-dot" aria-hidden="true"></span>24 hour commercial support available</p>
+      <p class="support-lead">rustguac is developed by ${m.name}, a Sydney IT company. Running it somewhere that matters? <a href="${m.contact}" rel="noopener">Have a chat with the team</a>.</p>
       <ul class="support-points">
         ${supportPoints.map(([i, t, d]) => `<li>${icon(i, 20)}<span><strong>${t}</strong>${d}</span></li>`).join("\n        ")}
       </ul>

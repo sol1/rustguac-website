@@ -279,3 +279,13 @@ html[data-theme="light"] .support-points .i { color: var(--accent); }
 .support-contact a { color: var(--text); text-decoration: none; }
 @media (hover: hover) { .support-contact a:hover { color: var(--accent-strong); } }
 @media (max-width: 860px) { .support { grid-template-columns: 1fr; } }
+.support-lead a { color: var(--text); text-decoration: underline; text-decoration-color: var(--border-strong); text-underline-offset: 3px; }
+@media (hover: hover) { .support-lead a:hover { color: var(--accent-strong); text-decoration-color: currentColor; } }
+.live-badge {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; padding: 5px 12px 5px 10px;
+  border: 1px solid color-mix(in srgb, var(--ok) 30%, var(--border)); border-radius: 999px;
+  background: color-mix(in srgb, var(--ok) 8%, transparent); color: var(--text-muted); font-size: 0.86rem;
+}
+.live-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex-shrink: 0; }
+.live-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--ok); animation: live-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
+@keyframes live-ping { 0% { transform: scale(1); opacity: 0.7; } 75%, 100% { transform: scale(2.6); opacity: 0; } }
