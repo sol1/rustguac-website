@@ -251,14 +251,17 @@ function footer() {
       <a class="release-chip" href="${site.release}" rel="noopener"><span class="pulse" aria-hidden="true"></span>v${site.version}<span class="muted">· ${releasedLabel}</span></a>
     </div>
     <div class="footer-cols">
-      ${col("Product", [["/features/", "Features"], ["/#screens", "Screenshots"], ["/#quickstart", "Quickstart"], ["/guacamole-alternative/", "Guacamole alternative"], ["/faq/", "FAQ"], ["/search/", "Search"]])}
+      ${col("Product", [["/features/", "Features"], ["/#screens", "Screenshots"], ["/#quickstart", "Quickstart"], ["/guacamole-alternative/", "Guacamole alternative"], ["/#support", "Commercial support"], ["/faq/", "FAQ"], ["/search/", "Search"]])}
       ${col("Docs", [["/docs/", "Documentation"], ["/docs/installation/", "Installation"], ["/docs/configuration/", "Configuration"], ["/docs/deployment-guide/", "Deployment guide"], ["/docs/security/", "Security"], ["/docs/api/", "API reference"], ["/docs/migration/", "Migrating from Guacamole"]])}
       ${col("Project", [[site.repo, "GitHub"], [site.releases, "Releases"], [site.dockerHub, "Docker Hub"], [site.issues, "Issues"], [site.discussions, "Discussions"], [site.security, "Security policy"], [site.websiteRepo, "Website source"]])}
     </div>
   </div>
   <div class="container footer-bottom">
-    <p>rustguac is developed by ${`<a href="${site.maintainer.url}" rel="noopener">${site.maintainer.name}</a>`} and contributors. <a href="${site.licenseFile}" rel="noopener">Apache-2.0 licensed</a>.</p>
-    <p>Independent community website, not affiliated with or endorsed by the Apache Software Foundation. Apache, Apache Guacamole and Guacamole are trademarks of the Apache Software Foundation.</p>
+    <div class="footer-legal">
+      <p>rustguac is open source under the <a href="${site.licenseFile}" rel="noopener">Apache-2.0 license</a>.</p>
+      <p>Independent community website, not affiliated with or endorsed by the Apache Software Foundation. Apache, Apache Guacamole and Guacamole are trademarks of the Apache Software Foundation.</p>
+    </div>
+    <a class="maker-link" href="${site.maintainer.url}" rel="noopener" aria-label="rustguac is developed by ${site.maintainer.name} and contributors"><span class="maker-by">Developed by</span><span class="sol1-logo maker-logo" aria-hidden="true"></span><span class="maker-and">and contributors</span></a>
   </div>
 </footer>`;
 }

@@ -37,7 +37,16 @@ export const site = {
   license: "Apache-2.0",
   licenseUrl: "https://www.apache.org/licenses/LICENSE-2.0",
   image: "sol1/rustguac",
-  maintainer: { name: "Sol1", url: "https://www.sol1.com.au" },
+  // Commercial support (README: "Commercial support"). Company details are from sol1.com.au
+  // (home, services and contact-us pages), checked 20 Oct 2026.
+  maintainer: {
+    name: "Sol1",
+    url: "https://www.sol1.com.au",
+    contact: "https://sol1.com.au/contact-us/",
+    phone: "1300 765 122",
+    since: 1999,
+    hours: "8am to 5pm AEST, Monday to Friday",
+  },
   repo,
   releases: `${repo}/releases`,
   latestRelease: `${repo}/releases/latest`,

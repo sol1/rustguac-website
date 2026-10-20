@@ -367,6 +367,36 @@ const faqSection = homeFaqs.length
 </section>`
   : "";
 
+/* ---------- Commercial support (site.maintainer) ---------- */
+const m = site.maintainer;
+const supportPoints = [
+  ["users", "Open-source specialists", `Sol1 has provided managed IT services for businesses since ${m.since}, with Linux and open-source infrastructure at the core of its work.`],
+  ["server", "The stack around rustguac", "Sol1 also supports Proxmox VE, NetBox and Ansible network automation, Icinga monitoring and managed Linux firewalls."],
+  ["history", "Support hours and SLAs", `Standard support runs ${m.hours}, with extended hours under a service level agreement.`],
+];
+const supportSection = `
+<section class="section section-alt" id="support" aria-labelledby="support-title">
+  <div class="container support">
+    <div class="support-text">
+      <p class="eyebrow">Commercial support</p>
+      <h2 id="support-title">Backed by the team that builds it</h2>
+      <p class="support-lead">rustguac is developed by ${m.name}, a Sydney IT services company, and commercial support for rustguac is available directly from them.</p>
+      <ul class="support-points">
+        ${supportPoints.map(([i, t, d]) => `<li>${icon(i, 20)}<span><strong>${t}</strong>${d}</span></li>`).join("\n        ")}
+      </ul>
+    </div>
+    <aside class="support-card" aria-label="Contact ${m.name}">
+      <span class="sol1-logo support-logo" role="img" aria-label="${m.name}"></span>
+      <p>Talk to ${m.name} about running rustguac in production.</p>
+      <a class="btn btn-primary btn-lg" href="${m.contact}" rel="noopener">${icon("chat", 18)}<span>Contact ${m.name}</span></a>
+      <ul class="support-contact">
+        <li>${icon("phone", 16)}<a href="tel:${m.phone.replace(/\s/g, "")}">${m.phone.replace(/ /g, "&nbsp;")}</a></li>
+        <li>${icon("history", 16)}<span>${m.hours}</span></li>
+      </ul>
+    </aside>
+  </div>
+</section>`;
+
 /* ---------- Final CTA ---------- */
 const ctaSection = `
 <section class="section cta-section" id="community" aria-labelledby="community-title" data-search-ignore>
@@ -391,7 +421,7 @@ const ctaSection = `
   </div>
 </section>`;
 
-const body = [hero, architecture, protocolsSection, highlightsSection, screensSection, securitySection, qsSection, useCasesSection, compareSection, faqSection, ctaSection].join("\n");
+const body = [hero, architecture, protocolsSection, highlightsSection, screensSection, securitySection, qsSection, useCasesSection, compareSection, faqSection, supportSection, ctaSection].join("\n");
 
 export default {
   slug: "home",
