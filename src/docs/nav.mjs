@@ -36,8 +36,7 @@ const allSections = [
     docs: [
       { slug: "roles-and-access-control", title: "Roles & access control", icon: "users", description: "OIDC, the 4-tier role hierarchy, group mappings, folder access and API tokens." },
       { slug: "web-sessions", title: "Web browser sessions", icon: "globe", description: "Chromium sessions with autofill, domain allowlisting and login scripts." },
-      // Proposed upstream in sol1/rustguac#302; served from content/docs-overlay/ until merged.
-      { slug: "spice-and-proxmox", title: "SPICE & Proxmox VE", icon: "monitor", issue: 302, description: "SPICE displays and Proxmox VE VM consoles: API tokens, one-time tickets, TLS pinning and tunnels." },
+      { slug: "spice-and-proxmox", title: "SPICE & Proxmox VE", icon: "monitor", description: "SPICE displays and Proxmox VE VM consoles: API tokens, one-time tickets, TLS pinning and tunnels." },
       { slug: "vdi", title: "VDI desktop containers", icon: "container", description: "Ephemeral Docker desktops: image requirements, lifecycle and persistent homes." },
       { slug: "rdp-video-performance", title: "RDP video performance", icon: "gauge", description: "H.264 passthrough, the GFX pipeline, and Windows and xrdp tuning." },
       { slug: "rdp-h264", title: "RDP H.264 passthrough", icon: "film", description: "Enabling H.264 passthrough and the Windows host settings it requires." },
