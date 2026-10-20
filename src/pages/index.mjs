@@ -5,10 +5,11 @@ import home from "./home.mjs";
 import features from "./features.mjs";
 import alternative from "./guacamole-alternative.mjs";
 import faq from "./faq.mjs";
+import support from "./support.mjs";
 import notFound from "./not-found.mjs";
 import searchPage from "./search.mjs";
 
-export const corePages = [home, features, alternative, faq, notFound];
+export const corePages = [home, features, alternative, faq, support, notFound];
 export { searchPage };
 // Back-compat with the reference site's tooling (build-media og cards).
 export const pages = [...corePages, searchPage].filter(Boolean);

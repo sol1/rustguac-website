@@ -683,7 +683,7 @@ export const faqs = [
   },
   {
     q: "Who maintains rustguac, and is commercial support available?",
-    a: `rustguac is developed by Sol1 and contributors in the open on <a href="${GH}">GitHub</a>, where issues and pull requests are welcome. According to the project README, commercial support for rustguac is available from Sol1; see <a href="/#support">commercial support</a> for how to reach them. This website is a community project and is not affiliated with the Apache Software Foundation.`,
+    a: `rustguac is developed by Sol1 and contributors in the open on <a href="${GH}">GitHub</a>, where issues and pull requests are welcome. According to the project README, commercial support for rustguac is available from Sol1; see <a href="/support/">commercial support</a> for how to reach them. This website is a community project and is not affiliated with the Apache Software Foundation.`,
   },
   {
     q: "How do I migrate from Apache Guacamole?",

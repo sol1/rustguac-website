@@ -251,7 +251,7 @@ function footer() {
       <a class="release-chip" href="${site.release}" rel="noopener"><span class="pulse" aria-hidden="true"></span>v${site.version}<span class="muted">· ${releasedLabel}</span></a>
     </div>
     <div class="footer-cols">
-      ${col("Product", [["/features/", "Features"], ["/#screens", "Screenshots"], ["/#quickstart", "Quickstart"], ["/guacamole-alternative/", "Guacamole alternative"], ["/#support", "Commercial support"], ["/faq/", "FAQ"], ["/search/", "Search"]])}
+      ${col("Product", [["/features/", "Features"], ["/#screens", "Screenshots"], ["/#quickstart", "Quickstart"], ["/guacamole-alternative/", "Guacamole alternative"], ["/support/", "Commercial support"], ["/faq/", "FAQ"], ["/search/", "Search"]])}
       ${col("Docs", [["/docs/", "Documentation"], ["/docs/installation/", "Installation"], ["/docs/configuration/", "Configuration"], ["/docs/deployment-guide/", "Deployment guide"], ["/docs/security/", "Security"], ["/docs/api/", "API reference"], ["/docs/migration/", "Migrating from Guacamole"]])}
       ${col("Project", [[site.repo, "GitHub"], [site.releases, "Releases"], [site.dockerHub, "Docker Hub"], [site.issues, "Issues"], [site.discussions, "Discussions"], [site.security, "Security policy"], [site.websiteRepo, "Website source"]])}
     </div>

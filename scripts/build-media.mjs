@@ -214,7 +214,10 @@ async function og() {
   for (const { key, og: o } of cards) {
     const len = o.title.replace(/<[^>]+>/g, "").length;
     const size = o.size || (len > 52 ? 48 : len > 40 ? 54 : 60);
-    const shot = shotFile(o.shot || "connections");
+    // A support card shows Sol1's contact panel in place of a screenshot.
+    const shot = o.support ? null : shotFile(o.shot || "connections");
+    const m = o.support ? (await import("../src/site.mjs")).site.maintainer : null;
+    const sol1Logo = pathToFileURL(join(root, "src", "static", "assets", "img", "sol1-logo.png")).href;
     const html = `<!doctype html><html><head><meta charset="utf-8"><style>${FONTS}
       *{box-sizing:border-box}html,body{margin:0;width:1200px;height:630px;overflow:hidden}
       body{font-family:Inter,sans-serif;color:#e8ebf5;background:#0a0c16;position:relative}
@@ -225,7 +228,7 @@ async function og() {
       .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(160,175,230,.05) 1px,transparent 1px),
         linear-gradient(90deg,rgba(160,175,230,.05) 1px,transparent 1px);background-size:40px 40px;
         -webkit-mask-image:linear-gradient(180deg,#000 30%,transparent)}
-      .copy{position:absolute;left:72px;top:62px;width:${shot ? 600 : 1000}px}
+      .copy{position:absolute;left:72px;top:62px;width:${shot || m ? 600 : 1000}px}
       .brand{display:flex;align-items:center;gap:16px}
       .brand svg{width:64px;height:64px;filter:drop-shadow(0 8px 20px rgba(91,192,190,.35))}
       .brand b{font-size:44px;font-weight:800;letter-spacing:-.045em}.brand b span{color:#5bc0be}
@@ -241,6 +244,14 @@ async function og() {
       .bar{height:30px;background:#0f1224;border-bottom:1px solid #20264a;display:flex;gap:8px;align-items:center;padding:0 12px}
       .bar span{width:10px;height:10px;border-radius:50%;background:#2b3259}
       .shot img{display:block;width:100%}
+      .panel{position:absolute;left:740px;top:150px;width:388px;padding:40px 36px;border-radius:20px;background:#121530;
+        border:1px solid #2b3259;box-shadow:0 40px 80px -20px rgba(0,0,0,.8),0 0 0 6px rgba(91,192,190,.06)}
+      .panel img{display:block;width:170px}
+      .live{display:inline-flex;align-items:center;gap:14px;margin-top:34px;padding:9px 18px 9px 14px;border-radius:999px;
+        border:1px solid rgba(82,210,143,.35);background:rgba(82,210,143,.08);font-size:20px;color:#c9cee3}
+      .live i{width:12px;height:12px;border-radius:50%;background:#52d28f;box-shadow:0 0 0 6px rgba(82,210,143,.18)}
+      .contact{margin-top:28px;padding-top:24px;border-top:1px solid #2b3259;font-family:JBM;font-size:20px;line-height:1.7;color:#8088a8}
+      .contact b{color:#d8ddf0;font-weight:500}
     </style></head><body><div class="glow"></div><div class="grid"></div>
       <div class="copy">
         <div class="brand">${logoSvg(64)}<b>rust<span>guac</span></b></div>
@@ -249,6 +260,8 @@ async function og() {
         <p>${o.sub}</p>
       </div>
       <div class="foot"><b>github.com/sol1/rustguac</b><span>Apache-2.0</span></div>
+      ${m ? `<div class="panel"><img src="${sol1Logo}" alt=""><div class="live"><i></i>24 hour support available</div>
+        <div class="contact"><b>${m.phone}</b><br>${m.url.replace(/^https?:\/\/(www\.)?/, "")}</div></div>` : ""}
       ${shot ? `<div class="shot"><div class="bar"><span></span><span></span><span></span></div><img src="${shot}"></div>` : ""}
     </body></html>`;
     const png = join(tmp, `og-${key}.png`);

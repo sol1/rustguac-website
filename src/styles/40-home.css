@@ -257,7 +257,7 @@ html[data-theme="light"] .proto-tab[aria-selected="true"] .i { color: var(--acce
 
 /* ---------- Commercial support ---------- */
 .support { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(32px, 5vw, 64px); align-items: center; }
-.support-text h2 { margin: 0 0 14px; font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.1; letter-spacing: -0.035em; font-weight: 800; }
+.support-text :is(h1, h2) { margin: 0 0 14px; font-size: clamp(1.8rem, 3.6vw, 2.6rem); line-height: 1.1; letter-spacing: -0.035em; font-weight: 800; }
 .support-lead { margin: 0 0 28px; color: var(--text-muted); font-size: 1.06rem; max-width: 600px; }
 .support-points { display: grid; gap: 20px; margin: 0; padding: 0; list-style: none; }
 .support-points li { display: flex; gap: 14px; }
