@@ -1,6 +1,6 @@
 name: Sync rustguac release
 
-# Checks sol1/rustguac for a new release once a day. When one is out, it syncs the
+# Checks sol1/rustguac for a new release every hour. When one is out, it syncs the
 # docs from that tag (which also sets the version and release date the site shows),
 # runs the same checks as CI and opens a pull request with a review checklist.
 # Merging the pull request deploys the site.
@@ -8,10 +8,13 @@ name: Sync rustguac release
 # Needs Settings → Actions → General → "Allow GitHub Actions to create and approve
 # pull requests". Pull requests opened with GITHUB_TOKEN do not trigger ci.yml, so
 # this workflow runs those checks itself before opening one.
+#
+# A run with no new release changes nothing: it stops once it sees the site is
+# already on the latest tag, or that the release branch (and its pull request) exists.
 
 on:
   schedule:
-    - cron: "17 3 * * *"
+    - cron: "17 * * * *"
   workflow_dispatch:
     inputs:
       ref:
@@ -35,10 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-
       - name: Find the release to sync
         id: release
         env:
@@ -56,6 +55,11 @@ jobs:
           else
             echo "sync=true" >> "$GITHUB_OUTPUT"
           fi
+
+      - uses: actions/setup-node@v7
+        if: steps.release.outputs.sync
+        with:
+          node-version: 24
 
       - name: Sync docs
         if: steps.release.outputs.sync
