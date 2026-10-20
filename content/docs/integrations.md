@@ -237,8 +237,8 @@ If rustguac has to reach your identity provider through an outbound HTTP proxy (
 ```bash
 # For systemd (same env file as the client secret above)
 cat >> /opt/rustguac/env <<'EOF'
-HTTPS_PROXY=http://squid.internal:3128
-HTTP_PROXY=http://squid.internal:3128
+HTTPS_PROXY=http://squid.example.internal:3128
+HTTP_PROXY=http://squid.example.internal:3128
 NO_PROXY=127.0.0.1,localhost,.internal
 EOF
 systemctl restart rustguac
@@ -262,7 +262,7 @@ Two things to watch:
 
 ## Vault / OpenBao Connections
 
-The connections feature stores connection entries in [HashiCorp Vault](https://www.vaultproject.io/) or [OpenBao](https://openbao.org/) KV v2. Credentials are read server-side and never sent to the browser. **Either Vault or OpenBao is required for the connections feature** (entries, folders, the Connections page); without it rustguac falls back to ad-hoc-only sessions via the Sessions page.
+The connections feature stores connection entries in [HashiCorp Vault](https://www.vaultproject.io/) or [OpenBao](https://openbao.org/) KV v2. Credentials are read server-side and never sent to the browser. **Either Vault or OpenBao is required for the connections feature** (entries, folders, the Connections page); without it rustguac falls back to ad-hoc connections only, through **Connect to a host** (beside the search box on every page).
 
 ### Quickstart script
 
@@ -556,12 +556,12 @@ This allows a fleet of rustguac instances to share common entries while maintain
 
 ### Entry types
 
-Connections entries can be SSH, RDP, VNC, or Web connections. Each entry stores:
+Connections entries can be SSH, RDP, VNC, SPICE, Proxmox VE console, Web, or VDI connections (see [SPICE and Proxmox VE Sessions](spice-and-proxmox.md) and [VDI Desktop Containers](vdi.md)). Each entry stores:
 
 - Connection type and target (hostname, port, URL)
 - Credentials (username, password, private key)
 - Protocol-specific settings (domain, security mode, certificate ignore, drive override)
-- **Multi-hop SSH tunnel chain** — optional ordered list of SSH bastion hosts to route through (all session types)
+- **Multi-hop SSH tunnel chain** — optional ordered list of SSH bastion hosts to route through (all session types except VDI)
 - **Prompt for credentials** — when enabled, users are asked for username/password at connect time, even if stored credentials exist
 - **NLA auth package** (RDP only) — force Kerberos or NTLM for NLA authentication
 - **KDC URL** (RDP only) — Kerberos Key Distribution Center proxy URL
@@ -593,7 +593,7 @@ For web sessions, prompted credentials are used for autofill substitution (`$USE
 
 ## SSH Tunnel / Multi-Hop Jump Hosts
 
-rustguac supports routing all session types (SSH, RDP, VNC, and web browser) through one or more SSH bastion hosts. This is useful when the target machine is not directly reachable from the rustguac server — for example, accessing an RDP server on an isolated network segment via a bastion host chain.
+rustguac supports routing SSH, RDP, VNC, SPICE, Proxmox VE and web browser sessions through one or more SSH bastion hosts. This is useful when the target machine is not directly reachable from the rustguac server — for example, accessing an RDP server on an isolated network segment via a bastion host chain.
 
 ### How it works
 
@@ -617,9 +617,9 @@ Admins configure jump hosts per entry in the connections editor. Click "Add Jump
 
 Jump host credentials are stored in Vault alongside the entry's other credentials and are never sent to the browser. When editing an entry, existing hop passwords and keys are preserved if the edit form omits them (per-hop credential merge by index).
 
-#### Ad-hoc sessions
+#### Ad-hoc connections
 
-Powerusers can add jump hosts when creating sessions from the Sessions page. The same multi-hop card UI is available — click "Add Jump Host" in the SSH Tunnel section.
+Powerusers can add jump hosts to an ad-hoc connection (**Connect to a host** (beside the search box on every page)), which uses the same entry editor: click "Add Jump Host" in the SSH Tunnel section. For non-admins the first jump host must be inside `ssh_allowed_networks`.
 
 ### Per-hop credentials
 
@@ -642,9 +642,18 @@ At least one of `password` or `private_key` should be provided per hop.
 | SSH | Yes | Tunnel forwards to SSH target |
 | RDP | Yes | Tunnel forwards to RDP target |
 | VNC | Yes | Tunnel forwards to VNC target |
+| SPICE | Yes | Tunnel forwards to the SPICE server's TLS port with TLS on, otherwise its plain port. See [SPICE and Proxmox VE](spice-and-proxmox.md#ssh-tunnels-and-jump-hosts) |
+| Proxmox VE | Yes | Two tunnels: one to the PVE API, one to the SPICE proxy Proxmox returns. See [SPICE and Proxmox VE](spice-and-proxmox.md#ssh-tunnels-and-jump-hosts) |
 | Web | Yes | Tunnel forwards to URL host:port; URL is rewritten to `127.0.0.1:{tunnel_port}` |
+| SPICE | Yes | Tunnel forwards to the SPICE host; with TLS on, to `tls_port` (or `port` if no TLS port is set), otherwise to `port` |
+| Proxmox VE | Yes | The PVE API and the SPICE proxy that Proxmox returns are each tunnelled through the chain |
+| VDI | Not applicable | The container runs on the rustguac host, so the connections editor and the Sessions page hide the jump host section for VDI |
 
 **Web session URL rewriting:** When jump hosts are configured for a web browser session, the SSH tunnel forwards to the URL's host and port (inferred from the scheme: 80 for HTTP, 443 for HTTPS, or explicit port). The URL passed to Chromium is rewritten to `{scheme}://127.0.0.1:{tunnel_port}{path}`. This means HTTPS targets will show certificate warnings since the hostname no longer matches the certificate. The original URL is still displayed in the session list.
+
+**Proxmox VE through jump hosts:** rustguac opens one tunnel chain to the PVE API (`proxmox_url`, port 8006 if the URL gives none) for the console request, then a second chain to the SPICE proxy named in the console response (port 3128 if it gives none), and points guacd at that local forward. The API is reached at a loopback address that no PVE certificate matches, so certificate verification is turned off for the API call; the SSH tunnel secures that hop. The SPICE TLS connection is carried inside the proxy's `CONNECT`, so when `proxmox_verify_tls` is on, the SPICE server certificate is still verified against the cluster CA.
+
+**Allowlists:** with jump hosts configured, the target is resolved by the bastion, not by rustguac, so the target is not checked against the local network allowlists. For ad-hoc sessions from non-admins, the first jump host is checked against `ssh_allowed_networks` instead; jump hosts in connection entries and in sessions created by admins are not checked. See [Network allowlists](security.md#network-allowlists-ssrf-protection).
 
 ### Backward compatibility
 
