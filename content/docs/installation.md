@@ -41,7 +41,7 @@ This starts both `rustguac-guacd` (the protocol daemon) and `rustguac` (the web 
 
 4. **(Required for connections) Set up Vault or OpenBao:**
 
-The connections page is rustguac's primary user-facing feature. It stores SSH, RDP, VNC, web session, and VDI entries in [HashiCorp Vault](https://www.vaultproject.io/) or [OpenBao](https://openbao.org/) KV v2 — credentials never reach the browser. **Without one of these, the Connections UI is unavailable** and users can only run ad-hoc sessions via the Sessions page or the API.
+The connections page is rustguac's primary user-facing feature. It stores SSH, RDP, VNC, web session, and VDI entries in [HashiCorp Vault](https://www.vaultproject.io/) or [OpenBao](https://openbao.org/) KV v2 — credentials never reach the browser. **Without one of these, the Connections UI is unavailable** and users can only open ad-hoc connections (**Connect to a host**, beside the search box on every page) or use the API.
 
 For a single-host install the fastest path is the bundled quickstart helper, which auto-detects vault or bao and provisions everything:
 
@@ -57,7 +57,7 @@ sudo ./contrib/vault-quickstart.sh --local
 
 See [Vault / OpenBao Connections](integrations.md#vault--openbao-connections) for the manual walkthrough, mTLS, multi-instance setup, and the security caveat for `--local` mode.
 
-6. **(Optional) Set up encrypted drive storage:**
+5. **(Optional) Set up encrypted drive storage:**
 
 ```bash
 sudo /opt/rustguac/bin/drive-setup.sh
@@ -65,7 +65,7 @@ sudo /opt/rustguac/bin/drive-setup.sh
 
 See [Drive / File Transfer](integrations.md#drive--file-transfer--luks-encryption) for details.
 
-7. **(Optional) Enable VDI desktop containers:**
+6. **(Optional) Enable VDI desktop containers:**
 
 If you want to use VDI sessions (ephemeral Docker desktop containers), install Docker and grant rustguac access:
 
@@ -141,14 +141,17 @@ Pre-built images are available on [Docker Hub](https://hub.docker.com/r/sol1/rus
 
 ```bash
 docker pull sol1/rustguac:latest
-docker run -d -p 8089:8089 sol1/rustguac:latest
+docker run --rm --entrypoint cat sol1/rustguac:latest /opt/rustguac/seccomp-chromium.json > seccomp-chromium.json
+docker run -d -p 8089:8089 --security-opt seccomp=seccomp-chromium.json sol1/rustguac:latest
 ```
+
+The seccomp profile lets Chromium's sandbox start, which web browser sessions need. Docker's default profile blocks the namespaces the sandbox uses, so without it every web session fails; SSH, RDP and VNC sessions work either way. The profile is Docker's default with only that change. See [Web sessions: Running under Docker](web-sessions.md#running-under-docker) for what it allows and the alternatives.
 
 To build from source instead:
 
 ```bash
 docker build -t rustguac .
-docker run -d -p 8089:8089 rustguac
+docker run -d -p 8089:8089 --security-opt seccomp=contrib/docker/seccomp-chromium.json rustguac
 ```
 
 The Docker image:
@@ -157,6 +160,8 @@ The Docker image:
 - Generates a self-signed TLS certificate at build time
 - Enables TLS between rustguac and guacd by default
 - Exposes HTTP on port 8089 (put a reverse proxy in front for HTTPS)
+- Runs as the unprivileged `rustguac` user, with Chromium's sandbox enabled
+- Includes the seccomp profile for web sessions at `/opt/rustguac/seccomp-chromium.json`
 
 ### API key setup
 
@@ -202,6 +207,9 @@ services:
     image: sol1/rustguac:latest
     ports:
       - "8089:8089"
+    security_opt:
+      # Lets Chromium's sandbox start for web sessions (see Option C above)
+      - seccomp=./seccomp-chromium.json
     volumes:
       - ./config.toml:/opt/rustguac/config.toml
       - rustguac-data:/opt/rustguac/data

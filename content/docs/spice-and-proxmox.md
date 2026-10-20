@@ -22,7 +22,7 @@ SPICE needs guacd's SPICE plugin, `libguac-client-spice`. Upstream guacamole-ser
 | `install.sh` (bare metal, Debian 13) | Yes. It installs `libspice-client-glib-2.0-dev` and builds guacd `--with-spice`. |
 | RPM (`build-rpm.sh`) | Not guaranteed. The RPM build does not pass `--with-spice` and does not run the plugin check. |
 
-guacd's `configure` quietly leaves out a protocol whose library is missing, even when you ask for it with `--with-spice`. That is how the SPICE plugin went missing from the `.deb` and Docker builds above. The Docker, `.deb` and `install.sh` builds now run `scripts/check-guacd-plugins.sh` after `make install`, and the build fails if the rdp, ssh, vnc or spice plugin is missing.
+guacd's `configure` quietly leaves out a protocol whose library is missing, even when you ask for it with `--with-spice`. That is how the SPICE plugin went missing from the `.deb` builds above. The Docker, `.deb` and `install.sh` builds now run `scripts/check-guacd-plugins.sh` after `make install`, and the build fails if the rdp, ssh, vnc or spice plugin, or `guacenc`, is missing.
 
 To check an existing install:
 
@@ -37,11 +37,11 @@ The first command should list the plugin, and the second should print nothing. I
 
 | From | To | Used by |
 |------|----|---------|
-| rustguac | SPICE server `hostname` and port (or TLS port) | SPICE |
+| guacd | SPICE server `hostname` and port (or TLS port) | SPICE |
 | rustguac | PVE API, usually `https://<node>:8006` | Proxmox VE |
 | guacd | The SPICE proxy that Proxmox returns, usually `http://<node>:3128` | Proxmox VE |
 
-rustguac and guacd run on the same host, or in the same container. Port 8006 working is not enough for Proxmox: the console itself goes through the SPICE proxy on port 3128 ([#218](https://github.com/sol1/rustguac/issues/218)). The [allowlist](#network-allowlists) still applies to all of these targets.
+rustguac and guacd run on the same host, or in the same container. rustguac also resolves the SPICE `hostname` itself, for the [allowlist](#network-allowlists) check. Port 8006 working is not enough for Proxmox: the console itself goes through the SPICE proxy on port 3128 ([#218](https://github.com/sol1/rustguac/issues/218)).
 
 ### Vault (for Connections entries)
 
@@ -67,7 +67,7 @@ Admins create entries in the Connections editor: choose **New Entry**, then set 
 
 A SPICE entry with no stored password also prompts at connect time: its button reads **Login...** instead of **Connect**. Prompted credentials are used for that session only and never stored (see [Credential prompting](integrations.md#credential-prompting)).
 
-The editor has no Monitors field for SPICE entries. To give a SPICE entry more than one monitor, set `max_monitors` through the [entries API](api.md#post-apiaddressbookfoldersscopefolderentries-admin) (see [Multi-monitor](#multi-monitor)).
+The editor has no Monitors field for SPICE entries. To give a SPICE entry more than one monitor, set `max_monitors` through the [entries API](api.md#post-apiaddressbookfoldersscopefolderentries-admin) (see [Multi-monitor](#multi-monitor)). Saving the entry in the editor afterwards removes `max_monitors` again, so set it last.
 
 ## Proxmox VE console entries
 
@@ -121,7 +121,7 @@ If the secret is empty, rustguac treats the Token ID as the complete `id=secret`
 - The token is saved with the rest of the entry in Vault, for example at `rustguac/shared/<folder>/<entry>` (see [KV v2 path structure](integrations.md#kv-v2-path-structure)).
 - The secret is **write-only**. No read endpoint returns it. Instead, entries carry a `has_proxmox_token_secret` boolean, and the editor shows *(leave blank to keep existing)* in the Token secret field.
 - Saving the editor with the secret field blank keeps the stored secret. API updates that leave out `proxmox_token_secret` keep it too (see [`PUT .../entries/:entry`](api.md#put-apiaddressbookfoldersscopefolderentriesentry-admin)).
-- Moving or cloning an entry is done on the server from the stored entry, so the token secret stays with it (this was fixed in v1.10.3).
+- Moving or cloning an entry is done on the server from the stored entry, so the token secret stays with it (since v1.10.3).
 - The SPICE ticket is never stored. rustguac fetches a new one on every connect.
 
 ### Node auto-detection
@@ -134,7 +134,7 @@ If the lookup does not find the VM, the connection fails with `VM <id> not found
 
 Each connect runs this sequence:
 
-```
+```text
 Browser
     |
     | 1. Connect (Connections entry, or POST /api/sessions)
@@ -146,7 +146,7 @@ rustguac ---- 2. GET /api2/json/cluster/resources?type=vm ----------> PVE API (:
     |    <--- host, proxy, tls-port, password (one-time ticket),
     |         ca, host-subject
     |
-    | 4. TLS (Guacamole protocol): SPICE connect args,
+    | 4. Guacamole protocol: SPICE connect args,
     |    ticket as the SPICE password
     v
 guacd (SPICE plugin)
@@ -165,7 +165,7 @@ SPICE proxy (http://<node>:3128) ---> VM console (tls-port)
    - `password`: the one-time ticket
    - `ca`: the cluster CA
    - `host-subject`: the expected certificate subject
-4. rustguac hands these to guacd straight away, in the same request. The ticket is valid for about 30 seconds and can be used once. rustguac never logs the token or the ticket, and never includes the response body in error messages.
+4. rustguac hands these to guacd straight away, in the same request. The ticket is valid for about 30 seconds and can be used once. rustguac never logs the token or the ticket. When a Proxmox call fails, the error includes Proxmox's own message; only a successful response carries a ticket, and that is never put in an error.
 5. guacd connects to the SPICE proxy, which forwards the connection to the VM's console. Proxmox SPICE is TLS-only, so rustguac sends guacd only the TLS port.
 
 The proxy URL is whatever Proxmox returns, and Proxmox gives the node's **name**, not the address you used in `proxmox_url` (for example `http://pve.example.internal:3128`). rustguac does not send a `proxy` override, so Proxmox picks the proxy itself, by default the node that handled the API request. Unless you use jump hosts, the machine running rustguac and guacd must be able to resolve that name and reach it on port 3128.
@@ -179,7 +179,7 @@ The Active Sessions list shows a Proxmox session's hostname as Proxmox's routing
 | Setting | Effect |
 |---------|--------|
 | **Connect using TLS** off | Plain SPICE to `hostname:port`. |
-| **Connect using TLS** on | rustguac sends guacd only the TLS port and no plain port, so the connection is TLS-only. Set **TLS port** to the server's TLS port. If it is blank, guacd falls back to 5900. |
+| **Connect using TLS** on | rustguac sends guacd only the TLS port and no plain port, so the connection is TLS-only. **TLS port** is the server's TLS port. If it is blank, the TLS connection uses **Port**. |
 | **CA certificate** | PEM CA used to verify the server certificate, for servers whose certificate is not signed by a public CA (e.g. a libvirt or Proxmox cluster CA). |
 | **Certificate subject** | Pins the expected certificate subject, e.g. `OU=PVE Cluster Node,CN=pve.example.internal`. When it is set, guacd checks the certificate subject instead of the hostname. |
 | **Ignore certificate** | Turns certificate verification off. Only for testing, or for self-signed displays you cannot otherwise verify. |
@@ -200,7 +200,7 @@ Proxmox ships a self-signed cluster certificate. Leave verification off unless t
 
 Both session types can go through a chain of SSH jump hosts. Configure the chain under **SSH Tunnel / Jump Hosts** in the entry editor, or with `jump_hosts` in an API request. How the chain works, and per-hop credentials, are covered in [SSH Tunnel / Multi-Hop Jump Hosts](integrations.md#ssh-tunnel--multi-hop-jump-hosts).
 
-**SPICE.** The tunnel forwards to the SPICE server. With TLS on it forwards to the TLS port, otherwise to the plain port. guacd then connects to the local end of the tunnel on `127.0.0.1`. The server presents the same certificate either way, so a **Certificate subject** check still passes when tunnelled.
+**SPICE.** The tunnel forwards to the SPICE server. With TLS on it forwards to the TLS port (or to Port when TLS port is blank), otherwise to the plain port. guacd then connects to the local end of the tunnel on `127.0.0.1`. The server presents the same certificate either way, so a **Certificate subject** check still passes when tunnelled. Without a subject, guacd checks the certificate against the hostname it dials, `127.0.0.1`, which the certificate will not match. For tunnelled TLS entries, set **Certificate subject**.
 
 **Proxmox VE.** rustguac builds the tunnels itself, two through the same chain:
 
@@ -215,7 +215,7 @@ SPICE and Proxmox targets are checked against `vnc_allowed_networks` (see [Netwo
 
 ```toml
 # Top-level key: put it before any [section] header
-vnc_allowed_networks = ["127.0.0.0/8", "::1/128", "198.51.100.0/24"]
+vnc_allowed_networks = ["127.0.0.0/8", "::1/128", "192.0.2.0/24"]
 ```
 
 What is checked depends on who creates the session:
@@ -228,7 +228,7 @@ What is checked depends on who creates the session:
 | First jump host | Not checked | `ssh_allowed_networks` |
 | Anything behind a jump host | Not checked (the bastion resolves it) | Not checked (the bastion resolves it) |
 
-Proxmox clusters in entries, and in sessions created by admins, are not checked, because clusters often sit outside the target networks. For non-admins, rustguac checks the Proxmox API URL and the SPICE proxy because it calls the API itself, and guacd then connects to whatever proxy the API names. A refused Proxmox target fails with `Proxmox API: host ... is not in the allowed network list` or `Proxmox SPICE proxy: ...` (see [Ad-hoc sessions from non-admins](security.md#ad-hoc-sessions-from-non-admins)).
+Proxmox clusters in entries, and in sessions created by admins, are not checked, because clusters often sit outside the target networks. For non-admins, rustguac checks the Proxmox API URL and the SPICE proxy because it calls the API itself, and guacd then connects to whatever proxy the API names. A refused Proxmox target fails with an error that starts `Proxmox API: host ...` or `Proxmox SPICE proxy: host ...` and ends `not in the allowed network list` (see [Ad-hoc sessions from non-admins](security.md#ad-hoc-sessions-from-non-admins)).
 
 SPICE sessions connect to the hostname, not to the address that passed the check, so that TLS certificate names still match. If that matters for your environment, use IP addresses in entries.
 
@@ -244,7 +244,7 @@ curl -X POST https://rustguac.example.com/api/sessions \
   -H "Content-Type: application/json" \
   -d '{
     "session_type": "spice",
-    "hostname": "198.51.100.20",
+    "hostname": "192.0.2.20",
     "port": 5900,
     "password": "xxxxxxxx"
   }'
@@ -255,12 +255,12 @@ With TLS, a pinned subject and a SPICE proxy:
 ```json
 {
   "session_type": "spice",
-  "hostname": "198.51.100.20",
+  "hostname": "192.0.2.20",
   "password": "xxxxxxxx",
   "spice_tls": true,
   "spice_tls_port": 5901,
   "spice_cert_subject": "CN=spice.example.com",
-  "spice_proxy": "http://198.51.100.5:3128"
+  "spice_proxy": "http://192.0.2.5:3128"
 }
 ```
 
@@ -308,7 +308,7 @@ To manage entries through the API, use [`POST /api/addressbook/folders/:scope/:f
 
 SPICE and Proxmox sessions can span more than one monitor. `max_monitors` is the total number of monitors (default 1). guacd is told `secondary-monitors = max_monitors - 1`. Set it with the **Monitors** field on Proxmox entries (1 to 4), or with `max_monitors` in an entry or session request.
 
-The guest must present more than one display head. For example, a Windows/QEMU guest exposes each head as a separate QXL device. In the client, the Controls panel lists the monitors. Each extra monitor opens in its own browser window, which you drag to a physical display and fullscreen with F11.
+The guest must present more than one display head. A Windows guest presents each head as a separate QXL device; a Linux guest uses a single QXL device with several heads. In the client, the Controls panel lists the monitors. Each extra monitor opens in its own browser window, so allow popups for the rustguac site. Drag each window to a physical display and press F11 to fullscreen it.
 
 ## Troubleshooting
 
@@ -342,7 +342,7 @@ The API returns failures as `400` with `{"error": "validation error: ..."}`. The
 **`Proxmox API: ...` / `Proxmox SPICE proxy: ...` / `jump host: ...` with `not in the allowed network list`:**
 - A non-admin's ad-hoc session was refused by an allowlist. See [Network allowlists](#network-allowlists).
 
-**`host ... is not in the allowed network list` for a SPICE entry:**
+**`host ...` ending in `not in the allowed network list` for a SPICE entry:**
 - Add the SPICE server's network to `vnc_allowed_networks`. It is a top-level key, so put it before any `[section]` header, or it is ignored.
 
 **Quick-connect link for a SPICE or Proxmox entry fails with `Unknown session type: ...`:**

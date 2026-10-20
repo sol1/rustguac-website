@@ -176,7 +176,7 @@ const screens = [
   { id: "web", label: "Web entry", d: "connection-editor-web", title: "Web session entry", text: "Point Chromium at an internal app, restrict it to allowed domains and let it autofill credentials the user never sees." },
   { id: "vdi", label: "VDI entry", d: "connection-editor-vdi", title: "VDI desktop entry", text: "Pick the Docker image and set CPU, memory and idle limits for each user's desktop container." },
   { id: "tunnel", label: "Jump hosts", d: "ssh-tunnel", title: "Multi-hop SSH tunnels", text: "Chain bastions per entry, each hop with its own credentials, to reach targets on isolated networks." },
-  { id: "sessions", label: "Sessions", d: "sessions", title: "Active sessions", text: "Live sessions with share links for control or view-only access, plus ad-hoc sessions for powerusers and admins." },
+  { id: "sessions", label: "Sessions", d: "sessions", title: "Active sessions", text: "Live sessions with share links for control or view-only access, and watch and shadow controls for admins." },
   { id: "recordings", label: "Recordings", d: "recordings", title: "Recordings", text: "Every recorded session in one list, with playback in the browser and one-click MP4 downloads." },
   { id: "player", label: "Player", d: "recording-player", title: "Recording player", text: "Play a session back in the browser and seek through it, without exporting anything." },
   { id: "reports", label: "Reports", d: "reports", title: "Reports", text: "Summary cards, a searchable session history and top connections and users, with CSV export." },

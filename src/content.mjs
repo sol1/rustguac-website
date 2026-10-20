@@ -16,8 +16,8 @@ const GH = "https://github.com/sol1/rustguac";
 // Headline for the latest release on the home page pill. It only shows while `version`
 // matches the synced release's major.minor, so it never advertises an older release.
 export const release = {
-  version: "1.12",
-  headline: "MP4 recording downloads and workload JWT login to Vault",
+  version: "1.13",
+  headline: "Connect to a host with the full Connections editor, and SPICE TLS fixes",
 };
 
 /* Home page highlight cards (6-8). */
@@ -95,6 +95,7 @@ export const protocols = [
     bullets: [
       "Password auth, plus username and password for VeNCrypt, RealVNC and macOS Screen Sharing",
       "Per-entry clipboard copy and paste control",
+      "Scales the remote screen to the window, or resizes servers with their own virtual screen",
       "Reachable through multi-hop SSH tunnels",
     ],
   },
@@ -645,11 +646,11 @@ export const faqs = [
   },
   {
     q: "Do I need HashiCorp Vault to run rustguac?",
-    a: `You need HashiCorp Vault or OpenBao for the Connections UI, which is rustguac's main user-facing feature. Connection entries and credentials are stored in Vault or OpenBao KV v2 and read server-side. Without one, rustguac still runs, but users can only create ad-hoc sessions from the Sessions page or the API. The bundled <code>contrib/vault-quickstart.sh</code> sets up an existing server, a dev server or a local install in one command; see <a href="/docs/integrations/#quickstart-script">Vault quickstart</a>.`,
+    a: `You need HashiCorp Vault or OpenBao for the Connections UI, which is rustguac's main user-facing feature. Connection entries and credentials are stored in Vault or OpenBao KV v2 and read server-side. Without one, rustguac still runs, but users can only make ad-hoc connections, from <strong>Connect to a host</strong> beside the search box or through the API. The bundled <code>contrib/vault-quickstart.sh</code> sets up an existing server, a dev server or a local install in one command; see <a href="/docs/integrations/#quickstart-script">Vault quickstart</a>.`,
   },
   {
     q: "How do I install rustguac with Docker?",
-    a: `Run <code>docker run -d -p 8089:8089 sol1/rustguac:latest</code>, then read the one-time admin API key from the container logs. The image bundles guacd, uses TLS between rustguac and guacd, and serves HTTP on port 8089, so put a reverse proxy in front for HTTPS. To keep your settings, bind-mount a <code>config.toml</code> to <code>/opt/rustguac/config.toml</code>. The <a href="/docs/installation/#docker-compose-example">installation guide</a> has a Docker Compose example with volumes for data and recordings.`,
+    a: `Run <code>docker run -d -p 8089:8089 sol1/rustguac:latest</code>, then read the one-time admin API key from the container logs. The image bundles guacd, uses TLS between rustguac and guacd, and serves HTTP on port 8089, so put a reverse proxy in front for HTTPS. To keep your settings, bind-mount a <code>config.toml</code> to <code>/opt/rustguac/config.toml</code>. Web browser sessions also need the seccomp profile shipped in the image (<code>--security-opt seccomp=seccomp-chromium.json</code>), because Docker's default profile blocks Chromium's sandbox; see <a href="/docs/web-sessions/#running-under-docker">running under Docker</a>. The <a href="/docs/installation/#docker-compose-example">installation guide</a> has a Docker Compose example with volumes for data and recordings.`,
   },
   {
     q: "Can I run rustguac with Docker Compose or Kubernetes?",
@@ -717,7 +718,10 @@ export const quickstart = [
     lang: "bash",
     code: [
       "docker pull sol1/rustguac:latest",
-      "docker run -d --name rustguac -p 8089:8089 sol1/rustguac:latest",
+      "",
+      "# Web sessions need the image's seccomp profile for Chromium's sandbox",
+      "docker run --rm --entrypoint cat sol1/rustguac:latest /opt/rustguac/seccomp-chromium.json > seccomp-chromium.json",
+      "docker run -d --name rustguac -p 8089:8089 --security-opt seccomp=seccomp-chromium.json sol1/rustguac:latest",
       "",
       "# First start prints a one-time admin API key",
       "docker logs rustguac",

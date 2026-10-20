@@ -50,7 +50,7 @@ CIDR ranges controlling which hosts sessions can connect to. All default to loca
 |-----|---------|-------------|
 | `ssh_allowed_networks` | `["127.0.0.0/8", "::1/128"]` | Allowed SSH targets (plus first jump hosts and host-key probes for non-admin ad-hoc use) |
 | `rdp_allowed_networks` | `["127.0.0.0/8", "::1/128"]` | Allowed RDP targets |
-| `vnc_allowed_networks` | `["127.0.0.0/8", "::1/128"]` | Allowed VNC and SPICE targets (plus Proxmox VE API and SPICE proxy hosts for non-admin ad-hoc use) |
+| `vnc_allowed_networks` | `["127.0.0.0/8", "::1/128"]` | Allowed VNC and SPICE targets (plus Proxmox VE API and SPICE proxy hosts for non-admin ad-hoc use; see [SPICE and Proxmox VE](spice-and-proxmox.md#network-allowlists)) |
 | `web_allowed_networks` | `["127.0.0.0/8", "::1/128"]` | Allowed web session URL hosts |
 
 ## Trusted proxies
@@ -194,7 +194,8 @@ other scopes keep working.
 When `[vault_local]` is used, set its `instance_name` to the value the data was
 originally stored under, so the `instance/<name>/` paths line up. Splitting an
 existing single-Vault deployment is a one-time copy with the `vault-migrate`
-subcommand (see the [migration guide](migration.md)).
+subcommand (see
+[Splitting to multiple Vaults](migration.md#splitting-to-multiple-vaults-disaster-recovery)).
 
 ```toml
 # Primary/local Vault (always reachable on this instance)
@@ -296,8 +297,8 @@ things are required: `typescript_path` must be set here (the global "where"),
 and the individual connection entry must have **Enable typescript recording
 for this session** ticked in its Recording Settings (Connections page, SSH
 entries only). A connection with the box unticked, or any session that is not
-SSH, writes no typescript. Ad-hoc SSH sessions from the Sessions page have no
-entry and so never record a typescript.
+SSH, writes no typescript. Ad-hoc SSH connections (Connect to a host) have no
+entry; for a non-admin they never record a typescript.
 
 The typescript is produced by guacd, so `typescript_path` must be writable by
 the guacd process. On a standard install guacd runs as the same `rustguac`

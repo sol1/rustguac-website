@@ -1,46 +1,46 @@
 {
   "repo": "sol1/rustguac",
-  "ref": "v1.12.1",
-  "commit": "bc9e8c60175f763da525729b28609b3e3e86cf31",
-  "version": "1.12.1",
-  "releaseDate": "2026-10-19T02:54:18Z",
-  "syncedAt": "2026-10-19T05:34:25.950Z",
+  "ref": "v1.13.1",
+  "commit": "634fa521c0087f587f0dff9e68d55a45f85fefa7",
+  "version": "1.13.1",
+  "releaseDate": "2026-10-20T04:33:06Z",
+  "syncedAt": "2026-10-20T05:36:00.619Z",
   "files": {
     "api.md": {
-      "modified": "2026-10-19T02:22:57Z",
-      "sha256": "a62c6c17eda61457"
+      "modified": "2026-10-20T04:19:21Z",
+      "sha256": "b8458e6866221de0"
     },
     "configuration.md": {
-      "modified": "2026-10-18T02:23:14Z",
-      "sha256": "02998de112be25b7"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "386165ee2b8de954"
     },
     "credential-variables.md": {
-      "modified": "2026-10-16T22:53:48Z",
-      "sha256": "39a97da0874b9404"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "0a744717b6e83187"
     },
     "deployment-guide.md": {
-      "modified": "2026-09-19T04:42:45Z",
-      "sha256": "983de5462916b05b"
+      "modified": "2026-10-19T21:54:41Z",
+      "sha256": "d6d886ed86903e43"
     },
     "installation.md": {
-      "modified": "2026-07-22T23:38:56Z",
-      "sha256": "01554ed137ad9960"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "4672c217e246728e"
     },
     "integrations.md": {
-      "modified": "2026-10-18T02:23:14Z",
-      "sha256": "2f34d8ad8de2e96d"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "ff3aeb2aff795c62"
     },
     "migration.md": {
-      "modified": "2026-10-16T22:50:49Z",
-      "sha256": "438b433b09f8e5fa"
+      "modified": "2026-10-19T21:54:31Z",
+      "sha256": "7c26bc2b12f45734"
     },
     "netbox.md": {
       "modified": "2026-10-16T20:59:00Z",
       "sha256": "331a9920b1cae2d3"
     },
     "overview.md": {
-      "modified": "2026-10-09T02:47:23Z",
-      "sha256": "146ad3744071e781"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "6374180c1bf25214"
     },
     "rdp-h264.md": {
       "modified": "2026-08-26T23:27:33Z",
@@ -59,12 +59,16 @@
       "sha256": "20fb15af893d19b5"
     },
     "roles-and-access-control.md": {
-      "modified": "2026-10-18T02:23:14Z",
-      "sha256": "57abd16ae4414ed9"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "ae507ca41fcb8dfc"
     },
     "security.md": {
-      "modified": "2026-10-19T02:22:57Z",
-      "sha256": "f3712151b0cfe254"
+      "modified": "2026-10-19T21:54:46Z",
+      "sha256": "99b9ffbf33c5d1aa"
+    },
+    "spice-and-proxmox.md": {
+      "modified": "2026-10-19T21:54:31Z",
+      "sha256": "75e024e738d628b0"
     },
     "themes.md": {
       "modified": "2026-05-29T00:57:46Z",
@@ -75,8 +79,8 @@
       "sha256": "f44e973b78b50767"
     },
     "web-sessions.md": {
-      "modified": "2026-06-09T06:25:25Z",
-      "sha256": "9a0cef8daf586e2a"
+      "modified": "2026-10-19T21:56:37Z",
+      "sha256": "264792dcada5c610"
     }
   }
 }

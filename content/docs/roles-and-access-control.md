@@ -7,11 +7,11 @@ rustguac implements a 4-tier role hierarchy:
 | Role | Level | Description |
 |------|-------|-------------|
 | **admin** | 4 | Full access — manage users, connections, recordings, sessions, group mappings, all API tokens |
-| **poweruser** | 3 | Ad-hoc session creation + connections connect + self-service API tokens |
-| **operator** | 2 | Connections connect only (no ad-hoc sessions); can view own API tokens |
+| **poweruser** | 3 | Ad-hoc connections (Connect to a host) + connections connect + self-service API tokens |
+| **operator** | 2 | Connections connect only (no ad-hoc connections); can view own API tokens |
 | **viewer** | 1 | Read-only — view sessions and recordings; no API token access |
 
-Roles are hierarchical: each role includes all permissions of lower roles. For example, a poweruser can do everything an operator can, plus create ad-hoc sessions.
+Roles are hierarchical: each role includes all permissions of lower roles. For example, a poweruser can do everything an operator can, plus open ad-hoc connections.
 
 ## Authentication paths
 
@@ -83,7 +83,7 @@ Their role, group mappings, tokens and credentials are kept. This is CLI-only on
 
 | Endpoint | Required role | Notes |
 |----------|--------------|-------|
-| `POST /api/sessions` | poweruser | Create ad-hoc sessions |
+| `POST /api/sessions` | poweruser | Create ad-hoc sessions. Non-admins get the [ad-hoc policy](security.md#ad-hoc-sessions-from-non-admins) |
 | `GET /api/sessions` | operator | List all sessions |
 | `GET /api/sessions/:id` | operator | View session details |
 | `DELETE /api/sessions/:id` | operator | Non-admins can only delete their own sessions |
@@ -95,6 +95,7 @@ Their role, group mappings, tokens and credentials are kept. This is CLI-only on
 | `GET /api/addressbook/folders` | operator | Filtered by OIDC group membership |
 | `GET /api/addressbook/folders/:scope/:folder/entries` | operator | Requires folder group access |
 | `POST .../entries/:entry/connect` | operator | Creates session from connections entry |
+| `POST /api/addressbook/adhoc/connect` | poweruser | Ad-hoc connection described as an entry (Connect to a host); the caller's own credential variables only, no folder defaults. Works without Vault |
 | `POST /api/addressbook/folders` | admin | Create folders |
 | `PUT /api/addressbook/folders/:scope/:folder` | admin | Update folder config |
 | `DELETE /api/addressbook/folders/:scope/:folder` | admin | Delete folders |
@@ -349,10 +350,10 @@ sqlite3 -header -column /opt/rustguac/data/rustguac.db \
 ```
 created_at           os_user  action       target  details
 -------------------  -------  -----------  ------  ------------------------------
-2026-09-19 04:11:02  alex     map_group    staff   role=viewer
-2026-09-19 04:11:05  alex     remap_group  staff   from=viewer to=admin
-2026-09-19 04:11:07  alex     add_admin    ops     ip_allowlist=true expiry=false
-2026-09-19 04:11:09  alex     rotate_key   ops
+2026-09-19 04:11:02  alice    map_group    staff   role=viewer
+2026-09-19 04:11:05  alice    remap_group  staff   from=viewer to=admin
+2026-09-19 04:11:07  alice    add_admin    ops     ip_allowlist=true expiry=false
+2026-09-19 04:11:09  alice    rotate_key   ops
 ```
 
 Entries are subject to the same retention cleanup as the API audit logs and are removed after 90 days.
