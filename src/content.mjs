@@ -17,7 +17,7 @@ const GH = "https://github.com/sol1/rustguac";
 // matches the synced release's major.minor, so it never advertises an older release.
 export const release = {
   version: "1.13",
-  headline: "Connect to a host with the full Connections editor, and SPICE TLS fixes",
+  headline: "Connect to a host with the full Connections editor, VNC network presets and a keyboard layout of your own",
 };
 
 /* Home page highlight cards (6-8). */
@@ -83,7 +83,8 @@ export const protocols = [
     text: "Windows and Linux desktops with auto-fit resize, from plain password logins to Kerberos and RemoteApp.",
     bullets: [
       "Kerberos NLA authentication, domain logins and security mode settings",
-      "RemoteApp (RAIL), keyboard layout and Wake-on-LAN per entry",
+      "RemoteApp (RAIL) and Wake-on-LAN per entry",
+      "23 keyboard layouts, set on the connection or once for yourself under My keyboard layout",
       "H.264 passthrough and the GFX pipeline for smooth video",
       "Drive redirection with optional LUKS-encrypted per-session storage",
     ],
@@ -141,6 +142,7 @@ export const protocols = [
       "Logging out of the desktop stops the container; closing the tab keeps it",
       "Persistent home directories bind-mounted per user",
       "Per-entry CPU, memory and idle limits, plus an image allowlist",
+      "Typed with your own keyboard layout, set once under My keyboard layout",
     ],
   },
 ];
@@ -400,7 +402,7 @@ export const featureGroups = [
       {
         icon: "terminal",
         title: "SFTP for SSH",
-        text: "Transfer files directly between the browser and the SSH target, with nothing stored on the rustguac host.",
+        text: "Transfer files directly between the browser and the SSH target, or send one to the browser with guacctl -d, with nothing stored on the rustguac host.",
         doc: "/docs/integrations/#ssh-sftp",
       },
     ],
@@ -666,6 +668,10 @@ export const faqs = [
     a: `rustguac works with any OpenID Connect provider. Authentik, Google, Okta, Keycloak and JumpCloud have been tested, and the docs include step-by-step guides for Authentik and Microsoft Entra ID. OIDC groups can be mapped to roles and used to restrict Connections folders. See <a href="/docs/integrations/#oidc-single-sign-on">OIDC single sign-on</a>.`,
   },
   {
+    q: "Why does rustguac say my identity provider has not verified my email address?",
+    a: `rustguac matches OIDC logins to users by email, so since 1.12 it refuses a login when the provider sends <code>email_verified: false</code>. authentik's default <code>email</code> scope mapping sends <code>false</code> for every user, so every authentik login is refused until you fix it. The recommended fix is an <code>email</code> scope mapping in authentik that sends <code>"email_verified": True</code>, used on the rustguac provider instead of the default one, as long as users can't change their own email in authentik. For providers you can't change, rustguac 1.13.4 adds <code>allow_unverified_email = true</code> under <code>[oidc]</code>, with the same caveat. See the <a href="/docs/integrations/#authentik-setup-guide">Authentik setup guide</a> and <a href="/docs/roles-and-access-control/#how-a-login-is-matched-to-a-user">how a login is matched to a user</a>.`,
+  },
+  {
     q: "Does rustguac support LDAP, SAML, RADIUS or TOTP?",
     a: `No. rustguac authenticates users with OIDC single sign-on, plus API keys and personal API tokens for automation. It has no LDAP, SAML, RADIUS or built-in TOTP login. If your directory or MFA lives behind an identity provider that speaks OIDC, such as Keycloak, Authentik, Okta or Entra ID, put rustguac behind that. Credential variables give a similar experience to Guacamole's LDAP credential passthrough without binding to LDAP.`,
   },
@@ -675,7 +681,7 @@ export const faqs = [
   },
   {
     q: "Which browsers does rustguac support?",
-    a: `rustguac works in any modern browser, including Chrome, Firefox, Edge, Safari, Chromium and Brave. The only caveat is H.264-accelerated RDP, which is off by default and enabled per connection. It needs a browser that decodes H.264 through WebCodecs, which means Chrome or Firefox. Chromium and Brave builds without the bundled H.264 codec, and older Safari, show a blank display on those connections.`,
+    a: `rustguac works in any modern browser, including Chrome, Firefox, Edge, Safari, Chromium and Brave. The only caveat is H.264-accelerated RDP, which is off by default and enabled per connection. It needs a browser that decodes H.264 through WebCodecs, which means Chrome or Firefox. Chromium and Brave builds without the bundled H.264 codec, and older Safari, show a blank display on those connections. <strong>Lock all keys in fullscreen</strong>, which sends Win, Alt+Tab and other shortcuts to the remote desktop, needs Chrome or Edge.`,
   },
   {
     q: "What is rustguac's licence?",
