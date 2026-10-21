@@ -1,14 +1,14 @@
 {
   "repo": "sol1/rustguac",
-  "ref": "v1.13.2",
-  "commit": "cf733afbd0416c16ce39d905fa751dcf9ba5801f",
-  "version": "1.13.2",
-  "releaseDate": "2026-10-20T05:36:31Z",
-  "syncedAt": "2026-10-20T08:32:14.414Z",
+  "ref": "v1.13.4",
+  "commit": "82aca33d1aedf9e141ec04b2cb15883ff625dc1c",
+  "version": "1.13.4",
+  "releaseDate": "2026-10-21T07:59:44Z",
+  "syncedAt": "2026-10-21T22:54:25.783Z",
   "files": {
     "api.md": {
-      "modified": "2026-10-20T04:37:43Z",
-      "sha256": "a0f64e18bd73b0e7"
+      "modified": "2026-10-21T02:49:24Z",
+      "sha256": "02d42f842b600825"
     },
     "configuration.md": {
       "modified": "2026-10-19T21:54:46Z",
@@ -27,8 +27,8 @@
       "sha256": "4672c217e246728e"
     },
     "integrations.md": {
-      "modified": "2026-10-19T21:54:46Z",
-      "sha256": "ff3aeb2aff795c62"
+      "modified": "2026-10-21T07:44:25Z",
+      "sha256": "7468e599cdbbb5f6"
     },
     "migration.md": {
       "modified": "2026-10-19T21:54:31Z",
@@ -39,8 +39,8 @@
       "sha256": "331a9920b1cae2d3"
     },
     "overview.md": {
-      "modified": "2026-10-20T05:18:59Z",
-      "sha256": "07240278a044699a"
+      "modified": "2026-10-21T02:49:24Z",
+      "sha256": "bf4d6b311d0d305f"
     },
     "rdp-h264.md": {
       "modified": "2026-08-26T23:27:33Z",
@@ -59,8 +59,8 @@
       "sha256": "20fb15af893d19b5"
     },
     "roles-and-access-control.md": {
-      "modified": "2026-10-19T21:54:46Z",
-      "sha256": "ae507ca41fcb8dfc"
+      "modified": "2026-10-21T07:44:25Z",
+      "sha256": "025b636500c3850b"
     },
     "security.md": {
       "modified": "2026-10-19T21:54:46Z",
