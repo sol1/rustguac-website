@@ -2,19 +2,20 @@ name: Sync rustguac release
 
 # Checks sol1/rustguac for a new release every hour. When one is out, it syncs the
 # docs from that tag (which also sets the version and release date the site shows),
-# runs the same checks as CI and opens a pull request with a review checklist.
-# Merging the pull request deploys the site.
+# runs the same checks as CI, commits the sync straight to main and deploys the site.
+# No one needs to merge anything between releases.
 #
-# Needs Settings → Actions → General → "Allow GitHub Actions to create and approve
-# pull requests". Pull requests opened with GITHUB_TOKEN do not trigger ci.yml, so
-# this workflow runs those checks itself before opening one.
+# Commits pushed with GITHUB_TOKEN do not trigger pages.yml, so this workflow starts
+# the deploy itself with workflow_dispatch (which GITHUB_TOKEN may trigger).
 #
 # A run with no new release changes nothing: it stops once it sees the site is
-# already on the latest tag, or that the release branch (and its pull request) exists.
+# already on the latest tag. If the checks fail, nothing is pushed.
 #
-# NOTIFY is who hears about it: they are assigned and asked to review each sync pull
-# request, and a failed run opens an issue assigned to them (one at a time, so an
-# hourly failure does not open an issue every hour).
+# Copy that goes beyond the docs (src/content.mjs, screenshots) is refreshed by hand
+# now and then. Each sync adds a comment with that release's review checklist to one
+# open "Content review" issue, so the reviews pile up in one place until the next
+# refresh closes it. A failed run opens an issue too (one at a time, so an hourly
+# failure does not open an issue every hour). NOTIFY is assigned to both.
 
 on:
   schedule:
@@ -27,7 +28,7 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
+  actions: write
   issues: write
 
 concurrency:
@@ -51,14 +52,11 @@ jobs:
         run: |
           tag="${INPUT_REF:-$(gh release view -R "$UPSTREAM" --json tagName --jq .tagName)}"
           current="$(node -p 'require("./content/docs/_source.json").ref')"
-          branch="release/$tag"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
-          echo "branch=$branch" >> "$GITHUB_OUTPUT"
           if [ "$tag" = "$current" ]; then
             echo "Site is already on $tag."
-          elif git ls-remote --exit-code --heads origin "$branch" >/dev/null; then
-            echo "Branch $branch already exists; review its pull request."
           else
+            echo "Syncing $current -> $tag."
             echo "sync=true" >> "$GITHUB_OUTPUT"
           fi
 
@@ -80,58 +78,66 @@ jobs:
             npx --yes html-validate@9 "dist/**/*.html"
           done
 
-      - name: Open pull request
+      - name: Commit to main and deploy
         if: steps.release.outputs.sync
         env:
           TAG: ${{ steps.release.outputs.tag }}
-          BRANCH: ${{ steps.release.outputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/docs
+          git commit -m "docs: sync rustguac $TAG"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh workflow run pages.yml --ref main
+
+      - name: Note the release on the content review issue
+        if: steps.release.outputs.sync
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
         run: |
           version="${TAG#v}"
           minor="$(echo "$version" | cut -d. -f1,2)"
           headline="$(node --input-type=module -e 'const m = await import("./src/content.mjs"); console.log(m.release?.version ?? "")')"
 
           {
-            echo "Syncs the docs from [$UPSTREAM $TAG](https://github.com/$UPSTREAM/releases/tag/$TAG). The site's version and release date follow from \`content/docs/_source.json\`."
+            echo "### [$UPSTREAM $TAG](https://github.com/$UPSTREAM/releases/tag/$TAG) is live"
             echo
-            echo "**Before merging**"
+            echo "The docs, version and release date are synced and deployed. Left for the next content refresh:"
             echo
             echo "- [ ] Read the [release notes](https://github.com/$UPSTREAM/releases/tag/$TAG) and update copy in \`src/content.mjs\` for new or changed features."
             if [ "$headline" != "$minor" ]; then
               echo "- [ ] Set \`release\` in \`src/content.mjs\` to the $minor headline. Until then the home page pill reads \"Release notes\"."
             fi
             echo "- [ ] If the UI changed, refresh the screenshots (README: Screenshots)."
-            echo
-            echo "**Docs overlay**"
-            echo
             issues="$(grep -ohE 'issue: [0-9]+' content/docs-overlay/fixes.mjs src/docs/nav.mjs | grep -oE '[0-9]+' | sort -un)"
-            if [ -z "$issues" ]; then
-              echo "No overlay fixes."
-            else
+            if [ -n "$issues" ]; then
+              echo
+              echo "**Docs overlay** (remove entries for closed issues once their fix is in a release)"
+              echo
               for n in $issues; do
                 state="$(gh issue view "$n" -R "$UPSTREAM" --json state --jq .state 2>/dev/null || echo UNKNOWN)"
                 echo "- $UPSTREAM#$n: $state"
               done
-              echo
-              echo "Remove overlay entries for closed issues once their fix is in this release."
             fi
-            echo
-            echo "**Build warnings**"
-            echo
-            echo '```'
-            grep -E '^docs:|warn' build.log | sort -u || echo "none"
-            echo '```'
-            echo
-            echo "Build, \`check.mjs\` and html-validate passed at a domain root and under a subpath."
-          } > pr-body.md
+            warnings="$(grep -E '^docs:|warn' build.log | sort -u || true)"
+            if [ -n "$warnings" ]; then
+              echo
+              echo "**Build warnings**"
+              echo
+              echo '```'
+              echo "$warnings"
+              echo '```'
+            fi
+          } > comment.md
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$BRANCH"
-          git add content/docs
-          git commit -m "docs: sync rustguac $TAG"
-          git push -u origin "$BRANCH"
-          gh pr create --base main --head "$BRANCH" --title "Sync rustguac $TAG" --body-file pr-body.md \
-            --assignee "$NOTIFY" --reviewer "$NOTIFY"
+          title="Content review"
+          open="$(gh issue list -R "$GITHUB_REPOSITORY" --state open --search "in:title \"$title\"" --json number,title --jq "map(select(.title == \"$title\")) | .[0].number // empty")"
+          if [ -z "$open" ]; then
+            open="$(gh issue create -R "$GITHUB_REPOSITORY" --title "$title" --assignee "$NOTIFY" \
+              --body "Releases synced since the last content refresh. The site already shows their docs and version; this tracks the copy and screenshots. Close it after a refresh, and the next sync opens a new one.")"
+          fi
+          gh issue comment "$open" -R "$GITHUB_REPOSITORY" --body-file comment.md
 
       - name: Open an issue if the sync failed
         if: failure()

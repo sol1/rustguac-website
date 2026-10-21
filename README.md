@@ -102,19 +102,24 @@ sitemap, both for production and at a domain root.
 ## Common changes
 
 **New rustguac release.** The **Sync rustguac release** workflow (`.github/workflows/release-sync.yml`)
-checks sol1/rustguac once a day. When a new release is out, it syncs the docs from that tag, runs the
-same checks as CI and opens a pull request. The pull request lists what to review:
+checks sol1/rustguac every hour. When a new release is out, it syncs the docs from that tag, runs the
+same checks as CI, commits the sync to `main` and deploys the site. Nobody has to merge anything; if
+the checks fail, nothing is pushed and a "Release sync failed" issue is opened instead.
+
+The version, release date, release links, JSON-LD `softwareVersion`, `llms.txt`, docs "Updated" dates
+and `security.txt` expiry all come from `content/docs/_source.json`, so the sync alone keeps them
+current. To sync by hand, run the workflow with a tag, or run `npm run sync-docs -- --ref vX.Y.Z` locally.
+
+What the sync can't do is rewrite copy. Each sync adds that release's checklist to one open
+**Content review** issue, so releases pile up there until the next content refresh:
 
 1. Update copy in `src/content.mjs` for new or changed features, and set `release` there to the new
    release's headline (the home page pill). Until it matches, the pill just reads "Release notes".
-2. Remove overlay fixes whose upstream issue is closed and fixed in this release. The pull request
+2. Remove overlay fixes whose upstream issue is closed and fixed in a synced release. The issue
    shows each overlay issue's state, and the build warns about fixes that no longer change anything.
 3. Refresh the screenshots if the UI changed.
 
-Merging the pull request deploys the site. The version, release date, release links, JSON-LD
-`softwareVersion`, `llms.txt`, docs "Updated" dates and `security.txt` expiry all come from
-`content/docs/_source.json`, so nothing else needs a version bump. To sync by hand, run the workflow
-with a tag, or run `npm run sync-docs -- --ref vX.Y.Z` locally.
+Close the issue after the refresh; the next sync opens a new one.
 
 **Docs sync.** `content/docs/` is a copy of rustguac's `docs/*.md`, with non-example sample data
 swapped for reserved example data, plus `_source.json` (repo, ref, commit, version, release date
