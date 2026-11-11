@@ -17,7 +17,7 @@ const GH = "https://github.com/sol1/rustguac";
 // matches the synced release's major.minor, so it never advertises an older release.
 export const release = {
   version: "1.13",
-  headline: "Connect to a host with the full Connections editor, VNC network presets and a keyboard layout of your own",
+  headline: "Connect to a host with the full Connections editor, a keyboard layout of your own and SSH terminal colours",
 };
 
 /* Home page highlight cards (6-8). */
@@ -74,7 +74,7 @@ export const protocols = [
       "Password, private key or an ephemeral Ed25519 keypair generated per session",
       "SFTP between the browser and the target, with no files stored on the rustguac server",
       "Optional plain-text typescript recording per connection",
-      "Per-entry font size, and multi-hop jump hosts",
+      "Per-entry font size and terminal colours, and multi-hop jump hosts",
     ],
   },
   {
@@ -672,12 +672,20 @@ export const faqs = [
     a: `rustguac matches OIDC logins to users by email, so since 1.12 it refuses a login when the provider sends <code>email_verified: false</code>. authentik's default <code>email</code> scope mapping sends <code>false</code> for every user, so every authentik login is refused until you fix it. The recommended fix is an <code>email</code> scope mapping in authentik that sends <code>"email_verified": True</code>, used on the rustguac provider instead of the default one, as long as users can't change their own email in authentik. For providers you can't change, rustguac 1.13.4 adds <code>allow_unverified_email = true</code> under <code>[oidc]</code>, with the same caveat. See the <a href="/docs/integrations/#authentik-setup-guide">Authentik setup guide</a> and <a href="/docs/roles-and-access-control/#how-a-login-is-matched-to-a-user">how a login is matched to a user</a>.`,
   },
   {
+    q: "Why does OIDC sign-in fail every time behind my reverse proxy?",
+    a: `Some proxies, and HTTP/2 clients, split cookies over several <code>Cookie</code> headers. Before 1.13.5, rustguac read only the first, so it could miss the login state or session cookie and every sign-in failed. rustguac 1.13.5 reads all of them, so upgrade first. If sign-in still fails, check that <code>redirect_uri</code> matches the public URL users reach rustguac on. See <a href="/docs/integrations/#oidc-single-sign-on">OIDC single sign-on</a>.`,
+  },
+  {
     q: "Does rustguac support LDAP, SAML, RADIUS or TOTP?",
     a: `No. rustguac authenticates users with OIDC single sign-on, plus API keys and personal API tokens for automation. It has no LDAP, SAML, RADIUS or built-in TOTP login. If your directory or MFA lives behind an identity provider that speaks OIDC, such as Keycloak, Authentik, Okta or Entra ID, put rustguac behind that. Credential variables give a similar experience to Guacamole's LDAP credential passthrough without binding to LDAP.`,
   },
   {
     q: "Does rustguac record sessions?",
     a: `Yes. rustguac records sessions in the standard Guacamole format, plays them back in the browser, and rotates them by disk usage or count. Since 1.12, any recording can be downloaded as MP4. SSH connections can also write an opt-in plain-text typescript for audit, which is listed in the UI but never downloadable through it. See <a href="/docs/configuration/#recording-section">recording settings</a>.`,
+  },
+  {
+    q: "What happens to a session when my laptop sleeps or my network changes?",
+    a: `Since 1.13.5, rustguac pings the browser every 15 seconds and ends the session once it has heard nothing at all for 45 seconds, so a vanished browser no longer stays Active for half an hour or counts against your session limit. Browsers answer these pings in background tabs too, so an idle or hidden session is not affected. Session limits are <code>max_sessions</code> (500 by default) and <code>max_sessions_per_user</code> (50), and only pending and active sessions count towards either. A VDI desktop keeps its container, so you can reconnect to it.`,
   },
   {
     q: "Which browsers does rustguac support?",
