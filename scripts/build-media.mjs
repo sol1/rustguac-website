@@ -67,7 +67,7 @@ const { LOGO_INNER } = await import("../src/icons.mjs");
 const logoSvg = (size) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="${size}" height="${size}">${LOGO_INNER}</svg>`;
 
 /* ---------- Screenshots ---------- */
-const EXPECTED = ["connections", "connection-editor-rdp", "connection-editor-web", "connection-editor-vdi", "ssh-tunnel", "credentials", "sessions", "recordings", "recording-player", "reports", "admin", "tokens", "themes"];
+const EXPECTED = ["connections", "connection-editor-rdp", "connection-editor-web", "connection-editor-vdi", "ssh-tunnel", "credentials", "sessions", "recordings", "recording-player", "reports", "admin", "roles", "user-access", "tokens", "themes"];
 // 1440 → 1440, 960, 720, 640.
 const widthsFor = (w) => [1440, 960, 720, 640].filter((x) => x <= w);
 

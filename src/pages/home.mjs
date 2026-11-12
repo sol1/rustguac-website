@@ -181,7 +181,9 @@ const screens = [
   { id: "recordings", label: "Recordings", d: "recordings", title: "Recordings", text: "Every recorded session in one list, with playback in the browser and one-click MP4 downloads." },
   { id: "player", label: "Player", d: "recording-player", title: "Recording player", text: "Play a session back in the browser and seek through it, without exporting anything." },
   { id: "reports", label: "Reports", d: "reports", title: "Reports", text: "Summary cards, a searchable session history and top connections and users, with CSV export." },
-  { id: "admin", label: "Admin", d: "admin", title: "Admin", text: "Manage users, roles and the OIDC group-to-role mappings evaluated on every login." },
+  { id: "admin", label: "Admin", d: "admin", title: "Admin", text: "System status and users, each with a role set directly or by their OIDC groups." },
+  { id: "roles", label: "Roles", d: "roles", title: "Roles", text: "The four built-in roles and your own, built from permissions and usable on users, group mappings and API token caps." },
+  { id: "access", label: "Access", d: "user-access", title: "Effective access", text: "For any user: the group mappings that apply, the roles in effect and which role grants each permission." },
 ].filter((s) => hasShot(s.d));
 
 const showcase = `<div class="showcase">

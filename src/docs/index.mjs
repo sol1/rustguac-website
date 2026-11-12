@@ -42,7 +42,7 @@ const OG_SHOT = {
   configuration: "admin",
   "deployment-guide": "sessions",
   "reverse-proxies": "session-desktop",
-  "roles-and-access-control": "tokens",
+  "roles-and-access-control": "roles",
   "web-sessions": "session-desktop",
   "spice-and-proxmox": "connections",
   vdi: "connection-editor-vdi",

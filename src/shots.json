@@ -89,6 +89,16 @@
       640
     ]
   },
+  "roles": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
   "session-desktop": {
     "width": 1440,
     "height": 900,
@@ -140,6 +150,16 @@
     ]
   },
   "tokens": {
+    "width": 1440,
+    "height": 900,
+    "widths": [
+      1440,
+      960,
+      720,
+      640
+    ]
+  },
+  "user-access": {
     "width": 1440,
     "height": 900,
     "widths": [

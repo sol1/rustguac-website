@@ -5,7 +5,7 @@ import { featureGroups } from "../data.mjs";
 
 // Presentation per group id (the copy itself lives in content.mjs).
 const GROUP = {
-  identity: { icon: "users", short: "Identity", shot: "tokens", alt: "Personal API tokens, each capped at a maximum role" },
+  identity: { icon: "users", short: "Identity", shot: "roles", alt: "Admin Roles section listing the four built-in roles and three custom roles with their permissions" },
   credentials: { icon: "vault", short: "Vault", shot: "credentials", alt: "My Credentials page where each user fills in credential variables once" },
   network: { icon: "route", short: "Networks", shot: "ssh-tunnel", alt: "SSH tunnel settings with a chain of jump hosts on a connection entry" },
   hardening: { icon: "shield", short: "Hardening" },
