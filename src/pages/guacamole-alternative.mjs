@@ -54,7 +54,7 @@ const steps = [
   },
   {
     t: "Recreate access with OIDC groups",
-    d: "Guacamole users, groups and permissions are not imported. Map OIDC groups to rustguac's four roles and restrict folders with allowed groups, then switch users over.",
+    d: "Guacamole users, groups and permissions are not imported. Map OIDC groups to rustguac's built-in roles, or to custom roles built from permissions, and restrict folders with allowed groups, then switch users over.",
   },
 ];
 

@@ -304,7 +304,7 @@ const qsSection = quickstart.length
           <li><strong>Install</strong> with Docker, the Debian package or the install script. Each one ships guacd and starts it for you.</li>
           <li><strong>Save the admin API key.</strong> It is printed once: by <code>add-admin</code>, or in the container logs on first start.</li>
           <li><strong>Connect Vault or OpenBao</strong> to turn on the Connections UI. <code>contrib/vault-quickstart.sh</code> sets one up in a single command.</li>
-          <li><strong>Add OIDC</strong> and map your groups to admin, poweruser, operator and viewer.</li>
+          <li><strong>Add OIDC</strong> and map your groups to admin, poweruser, operator and viewer, or to roles of your own.</li>
         </ol>
         <div class="quickstart-links">
           <a class="btn btn-ghost" href="${href("/docs/installation/")}">${icon("book", 16)}<span>Installation guide</span></a>

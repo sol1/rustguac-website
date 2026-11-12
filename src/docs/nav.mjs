@@ -34,7 +34,7 @@ const allSections = [
     icon: "layers",
     blurb: "Roles, web and VDI sessions, RDP video, credentials, reports and themes.",
     docs: [
-      { slug: "roles-and-access-control", title: "Roles & access control", icon: "users", description: "OIDC, the 4-tier role hierarchy, group mappings, folder access and API tokens." },
+      { slug: "roles-and-access-control", title: "Roles & access control", icon: "users", description: "OIDC, roles and permissions, custom roles, group mappings, folder access and API tokens." },
       { slug: "web-sessions", title: "Web browser sessions", icon: "globe", description: "Chromium sessions with autofill, domain allowlisting and login scripts." },
       { slug: "spice-and-proxmox", title: "SPICE & Proxmox VE", icon: "monitor", description: "SPICE displays and Proxmox VE VM consoles: API tokens, one-time tickets, TLS pinning and tunnels." },
       { slug: "vdi", title: "VDI desktop containers", icon: "container", description: "Ephemeral Docker desktops: image requirements, lifecycle and persistent homes." },

@@ -123,7 +123,7 @@ export function softwareNode() {
       "VNC, SPICE and Proxmox VE VM consoles",
       "Web browser sessions: headless Chromium on Xvnc with autofill and domain allowlisting",
       "VDI desktop containers: ephemeral Docker desktops per user",
-      "OIDC single sign-on with a 4-tier role system and group mapping",
+      "OIDC single sign-on with built-in and custom roles and group mapping",
       "Connection credentials stored in HashiCorp Vault or OpenBao, never sent to the browser",
       "Multi-hop SSH tunnels through jump hosts and bastions",
       "Session recording with a playback UI, session sharing and reports",

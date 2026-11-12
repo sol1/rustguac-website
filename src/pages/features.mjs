@@ -23,7 +23,7 @@ const body = `
   <div class="container">
     <p class="eyebrow">Features</p>
     <h1>Everything rustguac does, in one place</h1>
-    <p class="page-lead">Seven session types through guacd, OIDC sign-in with four roles, credentials kept in Vault or OpenBao, multi-hop SSH tunnels, recording and reports, all from a single Rust binary. Every item links to the documentation that backs it.</p>
+    <p class="page-lead">Seven session types through guacd, OIDC sign-in with built-in and custom roles, credentials kept in Vault or OpenBao, multi-hop SSH tunnels, recording and reports, all from a single Rust binary. Every item links to the documentation that backs it.</p>
     <nav class="jump" aria-label="On this page" data-search-ignore>
       ${featureGroups.map((g) => `<a href="#${g.id}">${icon(meta(g).icon, 16)}${esc(meta(g).short)}</a>`).join("")}
     </nav>

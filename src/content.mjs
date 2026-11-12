@@ -16,8 +16,8 @@ const GH = "https://github.com/sol1/rustguac";
 // Headline for the latest release on the home page pill. It only shows while `version`
 // matches the synced release's major.minor, so it never advertises an older release.
 export const release = {
-  version: "1.13",
-  headline: "Connect to a host with the full Connections editor, a keyboard layout of your own and SSH terminal colours",
+  version: "1.14",
+  headline: "Custom roles built from permissions, and Vault Agent token files",
 };
 
 /* Home page highlight cards (6-8). */
@@ -39,8 +39,8 @@ export const highlights = [
   },
   {
     icon: "key",
-    title: "OIDC SSO and four roles",
-    text: "Sign in with Authentik, Keycloak, Okta, Entra ID, Google or any OpenID Connect provider. OIDC groups map to admin, poweruser, operator and viewer.",
+    title: "OIDC SSO and custom roles",
+    text: "Sign in with Authentik, Keycloak, Okta, Entra ID, Google or any OpenID Connect provider. OIDC groups map to the four built-in roles or to roles you build from permissions.",
   },
   {
     icon: "route",
@@ -152,7 +152,7 @@ export const featureGroups = [
   {
     id: "identity",
     title: "Identity and access control",
-    lead: "Bring your OpenID Connect provider, map its groups to four roles, and decide folder by folder who sees what.",
+    lead: "Bring your OpenID Connect provider, map its groups to built-in or custom roles, and decide folder by folder who sees what.",
     items: [
       {
         icon: "key",
@@ -162,14 +162,26 @@ export const featureGroups = [
       },
       {
         icon: "users",
-        title: "Four-tier roles",
-        text: "admin, poweruser, operator and viewer. Each role includes everything below it, from read-only viewing up to managing users, connections and tokens.",
-        doc: "/docs/roles-and-access-control/#role-hierarchy",
+        title: "Roles built from permissions",
+        text: "Every check asks for one of 17 permissions. The built-in admin, poweruser, operator and viewer roles each include everything below them, unchanged from earlier releases.",
+        doc: "/docs/roles-and-access-control/#roles-and-permissions",
+      },
+      {
+        icon: "layers",
+        title: "Custom roles",
+        text: "New in 1.14: build your own roles under Admin &gt; Roles, starting from the Connection editor or Connect only templates. Nobody can grant a permission they don't hold.",
+        doc: "/docs/roles-and-access-control/#custom-roles",
+      },
+      {
+        icon: "eye",
+        title: "Effective access",
+        text: "An access button on each user shows their role, the group mappings that apply and which role grants each permission. Role, user and mapping changes go to an audit log.",
+        doc: "/docs/roles-and-access-control/#seeing-what-someone-can-do",
       },
       {
         icon: "workflow",
         title: "Group-to-role mappings",
-        text: "OIDC groups are evaluated on every login and the highest matching role wins. Manage mappings in the Admin page, the API or with rustguac map-group.",
+        text: "A user gets every role their OIDC groups map to, and a mapping change applies straight away. Manage mappings in the Admin page, the API or with rustguac map-group.",
         doc: "/docs/roles-and-access-control/#group-to-role-mappings-1",
       },
       {
@@ -187,7 +199,7 @@ export const featureGroups = [
       {
         icon: "ticket",
         title: "API keys and user tokens",
-        text: "SHA-256 hashed admin API keys with IP allowlists and expiry, plus rgu_-prefixed personal tokens capped at a max role and fully audited.",
+        text: "SHA-256 hashed admin API keys with IP allowlists and expiry, plus rgu_-prefixed personal tokens capped at a built-in or custom role and fully audited.",
         doc: "/docs/roles-and-access-control/#user-api-tokens-1",
       },
     ],
@@ -214,6 +226,12 @@ export const featureGroups = [
         title: "Workload JWT login",
         text: "New in 1.12: log into Vault with a short-lived Kubernetes service-account token, Nomad workload identity or SPIRE JWT-SVID instead of a stored AppRole secret.",
         doc: "/docs/integrations/#workload-jwt-authentication",
+      },
+      {
+        icon: "key",
+        title: "Vault Agent token files",
+        text: "New in 1.14.1: point a Vault block at a token_file kept fresh by Vault Agent or OpenBao Agent. rustguac reads it on every request and never logs in or renews it.",
+        doc: "/docs/integrations/#externally-managed-tokens-vaultopenbao-agent",
       },
       {
         icon: "cloud",
@@ -657,7 +675,7 @@ export const faqs = [
   },
   {
     q: "Can I run rustguac with Docker Compose or Kubernetes?",
-    a: `Yes, rustguac ships as a Docker image, and the docs include a Docker Compose example with volumes for the database and recordings. The documentation does not provide a Helm chart or Kubernetes manifests. It does document logging into Vault or OpenBao with a projected Kubernetes service-account token (workload JWT auth, added in 1.12), so a pod needs no stored Vault secret. See <a href="/docs/installation/#docker-compose-example">Docker Compose</a> and <a href="/docs/integrations/#workload-jwt-authentication">workload JWT authentication</a>.`,
+    a: `Yes, rustguac ships as a Docker image, and the docs include a Docker Compose example with volumes for the database and recordings. The documentation does not provide a Helm chart or Kubernetes manifests. It does document logging into Vault or OpenBao with a projected Kubernetes service-account token (workload JWT auth, added in 1.12), so a pod needs no stored Vault secret. Since 1.14.1 it can instead read a token kept up to date by a Vault Agent or OpenBao Agent sidecar, through <code>token_file</code>. See <a href="/docs/installation/#docker-compose-example">Docker Compose</a>, <a href="/docs/integrations/#workload-jwt-authentication">workload JWT authentication</a> and <a href="/docs/integrations/#externally-managed-tokens-vaultopenbao-agent">externally managed tokens</a>.`,
   },
   {
     q: "Which Linux distributions are supported?",
@@ -666,6 +684,10 @@ export const faqs = [
   {
     q: "Which OIDC providers work with rustguac?",
     a: `rustguac works with any OpenID Connect provider. Authentik, Google, Okta, Keycloak and JumpCloud have been tested, and the docs include step-by-step guides for Authentik and Microsoft Entra ID. OIDC groups can be mapped to roles and used to restrict Connections folders. See <a href="/docs/integrations/#oidc-single-sign-on">OIDC single sign-on</a>.`,
+  },
+  {
+    q: "Can I let someone manage connections without making them an admin?",
+    a: `Yes, with a custom role, new in rustguac 1.14. Under <strong>Admin &gt; Roles</strong>, start from the <strong>Connection editor</strong> template to manage connections in every folder without folder access settings, reports, recordings or admin, or from <strong>Connect only</strong> for contractors who should only see the folders they're given. Custom roles work on users, in OIDC group mappings and as API token caps, and nobody can grant a permission they don't hold. The four built-in roles are unchanged, so nothing needs doing on upgrade. See <a href="/docs/roles-and-access-control/#custom-roles">custom roles</a>.`,
   },
   {
     q: "Why does rustguac say my identity provider has not verified my email address?",
