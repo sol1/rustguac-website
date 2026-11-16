@@ -215,6 +215,7 @@ The `jump_hosts` array defines an ordered chain of SSH bastion hops. Each hop co
 | `security` | string | RDP | `tls`, `nla`, or `rdp` |
 | `server_layout` | string | RDP | Keyboard layout, a guacd keymap name such as `de-ch-qwertz` (see [keyboard layout](overview.md#keyboard-layout)). Default: guacd's, US English |
 | `ignore_cert` | boolean | RDP | Ignore TLS certificate errors |
+| `rdp_console` | boolean | RDP | Connect to the console (admin) session, like `mstsc /admin`. Also skips RD Connection Broker load balancing |
 | `auth_pkg` | string | RDP | NLA auth package: `kerberos`, `ntlm`, or empty (negotiate) |
 | `kdc_url` | string | RDP | Kerberos KDC or KDC Proxy URL |
 | `kerberos_cache` | string | RDP | Path to Kerberos credential cache (advanced) |
@@ -652,6 +653,7 @@ Create a connection entry. The body includes a `name` field plus all entry field
 | `security` | string | RDP | Security mode |
 | `server_layout` | string | RDP | Keyboard layout, a guacd keymap name such as `de-ch-qwertz`. Empty uses the connecting user's own layout if they have set one, otherwise guacd's default (US English) |
 | `ignore_cert` | boolean | RDP | Ignore certificate errors |
+| `rdp_console` | boolean | RDP | Connect to the console (admin) session, like `mstsc /admin`. Also skips RD Connection Broker load balancing |
 | `auth_pkg` | string | RDP | NLA auth package |
 | `kdc_url` | string | RDP | Kerberos KDC URL |
 | `color_depth` | integer | RDP | Color depth |
@@ -840,6 +842,16 @@ Create a personal API token. Requires **poweruser** role or higher. Only availab
 ```
 
 The `token` field is the plaintext token — it is only returned once at creation and cannot be retrieved again.
+
+### Favourites
+
+The caller's favourite entries (#335), for a signed-in user who holds `connections.connect`. Admin API keys have none. Each favourite is `{"scope": "shared", "folder": "ops/linux", "entry": "web01"}`.
+
+| Endpoint | |
+|---|---|
+| `GET /api/me/favourites` | The caller's favourites, oldest first, as they starred them. Entries since moved, renamed or no longer shared are still listed; the Connections page shows only those it finds among the entries the caller can open. |
+| `PUT /api/me/favourites` | Add one (body as above). Adding one that exists is fine; at most 500, after which `409`. |
+| `DELETE /api/me/favourites` | Remove one (body as above). |
 
 ### `GET /api/me/tokens`
 

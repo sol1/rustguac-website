@@ -1,34 +1,34 @@
 {
   "repo": "sol1/rustguac",
-  "ref": "v1.14.1",
-  "commit": "f6c4ca04bb0d871bf05efc4ac85cb52690086a98",
-  "version": "1.14.1",
-  "releaseDate": "2026-11-11T22:29:06Z",
-  "syncedAt": "2026-11-12T05:05:00.478Z",
+  "ref": "v1.14.2",
+  "commit": "20c0238401f30d52c0f6400ac9771ac519f7e88c",
+  "version": "1.14.2",
+  "releaseDate": "2026-11-16T03:55:02Z",
+  "syncedAt": "2026-11-16T11:21:39.884Z",
   "files": {
     "api.md": {
-      "modified": "2026-11-11T00:40:18Z",
-      "sha256": "8d5e960c1fa05003"
+      "modified": "2026-11-16T03:39:16Z",
+      "sha256": "33b0f0659bc4a848"
     },
     "configuration.md": {
-      "modified": "2026-10-19T21:54:46Z",
-      "sha256": "386165ee2b8de954"
+      "modified": "2026-11-16T03:28:31Z",
+      "sha256": "e9b9f09a365c9c9f"
     },
     "credential-variables.md": {
       "modified": "2026-10-19T21:54:46Z",
       "sha256": "0a744717b6e83187"
     },
     "deployment-guide.md": {
-      "modified": "2026-10-19T21:54:41Z",
-      "sha256": "d6d886ed86903e43"
+      "modified": "2026-11-13T03:13:53Z",
+      "sha256": "0fc5a319f4aa84b5"
     },
     "installation.md": {
       "modified": "2026-10-19T21:54:46Z",
       "sha256": "4672c217e246728e"
     },
     "integrations.md": {
-      "modified": "2026-11-11T22:14:39Z",
-      "sha256": "5c5038813415e3fc"
+      "modified": "2026-11-16T03:28:31Z",
+      "sha256": "4b783826747abd45"
     },
     "migration.md": {
       "modified": "2026-10-19T21:54:31Z",
@@ -39,8 +39,8 @@
       "sha256": "331a9920b1cae2d3"
     },
     "overview.md": {
-      "modified": "2026-10-21T02:49:24Z",
-      "sha256": "bf4d6b311d0d305f"
+      "modified": "2026-11-16T03:39:16Z",
+      "sha256": "86d6c7f30facec21"
     },
     "rdp-h264.md": {
       "modified": "2026-08-26T23:27:33Z",
@@ -55,12 +55,12 @@
       "sha256": "6103f7606de1382a"
     },
     "reverse-proxies.md": {
-      "modified": "2026-10-17T02:46:27Z",
-      "sha256": "20fb15af893d19b5"
+      "modified": "2026-11-13T03:13:53Z",
+      "sha256": "895870d6192992e8"
     },
     "roles-and-access-control.md": {
-      "modified": "2026-11-11T00:40:18Z",
-      "sha256": "a6e83ddeda07f49d"
+      "modified": "2026-11-16T03:28:31Z",
+      "sha256": "2141f3f516936f72"
     },
     "security.md": {
       "modified": "2026-10-19T21:54:46Z",

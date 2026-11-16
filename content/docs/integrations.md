@@ -246,10 +246,10 @@ rustguac roles. See [Roles and Access Control](roles-and-access-control.md).
   app-specific key that the standard key set does not contain. Create
   the app as in step 1. A restart also rules out a key rotation since
   rustguac started.
-- **Login succeeds but `default_role` doesn't get applied**: `default_role`
-  only fires when no group-to-role mapping matches. Configure mappings on
-  the Admin page (or, for a single-user test, set `default_role = "admin"`
-  temporarily to bootstrap).
+- **Login succeeds but `default_role` doesn't get applied**: by default it
+  applies only when creating an account; existing users keep their stored role
+  unless a group mapping matches. Set `sync_role_on_login = true` to reconcile
+  existing users too. See [SSO-managed roles](roles-and-access-control.md#sso-managed-roles).
 
 ### Outbound HTTP proxy (egress)
 
@@ -1086,7 +1086,7 @@ For nginx, Caddy, Apache, and Traefik setups, see [reverse-proxies.md](reverse-p
 - **TLS termination** at HAProxy with modern ciphersuites (TLS 1.2+, ECDHE)
 - **HTTP to HTTPS redirect**
 - **X-Forwarded-For handling** — strips incoming headers and adds the real client IP
-- **WebSocket support** — `timeout tunnel 8h` for long-lived sessions
+- **WebSocket support** — `timeout tunnel 8h` for long-lived sessions, and `h2-workaround-bogus-websocket-clients` to keep WebSockets on HTTP/1.1 (without it, Firefox sessions drop when HTTP/2 is on; see [reverse-proxies.md](reverse-proxies.md#websockets-over-http2))
 - **Health checks** against `/api/health`
 - **Slowloris protection** — `timeout http-request 10s`
 - **HSTS header** — `max-age=31536000; includeSubDomains`
