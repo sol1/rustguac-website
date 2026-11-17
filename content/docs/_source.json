@@ -1,14 +1,14 @@
 {
   "repo": "sol1/rustguac",
-  "ref": "v1.14.2",
-  "commit": "20c0238401f30d52c0f6400ac9771ac519f7e88c",
-  "version": "1.14.2",
-  "releaseDate": "2026-11-16T03:55:02Z",
-  "syncedAt": "2026-11-16T11:21:39.884Z",
+  "ref": "v1.14.4",
+  "commit": "ee7b46f918ac8b745aa60797a9edfca3bfbc070e",
+  "version": "1.14.4",
+  "releaseDate": "2026-11-17T00:18:54Z",
+  "syncedAt": "2026-11-17T04:29:40.100Z",
   "files": {
     "api.md": {
-      "modified": "2026-11-16T03:39:16Z",
-      "sha256": "33b0f0659bc4a848"
+      "modified": "2026-11-16T22:49:31Z",
+      "sha256": "701e0ab9324f514a"
     },
     "configuration.md": {
       "modified": "2026-11-16T03:28:31Z",
@@ -19,12 +19,12 @@
       "sha256": "0a744717b6e83187"
     },
     "deployment-guide.md": {
-      "modified": "2026-11-13T03:13:53Z",
-      "sha256": "0fc5a319f4aa84b5"
+      "modified": "2026-11-16T22:49:31Z",
+      "sha256": "9ac315743ce1bbcd"
     },
     "installation.md": {
-      "modified": "2026-10-19T21:54:46Z",
-      "sha256": "4672c217e246728e"
+      "modified": "2026-11-17T00:04:56Z",
+      "sha256": "1ac1027314df39e5"
     },
     "integrations.md": {
       "modified": "2026-11-16T03:28:31Z",
@@ -39,8 +39,8 @@
       "sha256": "331a9920b1cae2d3"
     },
     "overview.md": {
-      "modified": "2026-11-16T03:39:16Z",
-      "sha256": "86d6c7f30facec21"
+      "modified": "2026-11-16T22:52:43Z",
+      "sha256": "cf01f07684b38114"
     },
     "rdp-h264.md": {
       "modified": "2026-08-26T23:27:33Z",
@@ -59,8 +59,8 @@
       "sha256": "895870d6192992e8"
     },
     "roles-and-access-control.md": {
-      "modified": "2026-11-16T03:28:31Z",
-      "sha256": "2141f3f516936f72"
+      "modified": "2026-11-16T22:49:31Z",
+      "sha256": "efd8f337d8b42378"
     },
     "security.md": {
       "modified": "2026-10-19T21:54:46Z",
@@ -75,8 +75,8 @@
       "sha256": "26cf2f1ec083f571"
     },
     "vdi.md": {
-      "modified": "2026-05-20T08:52:22Z",
-      "sha256": "f44e973b78b50767"
+      "modified": "2026-11-16T22:52:43Z",
+      "sha256": "b1cfa5b7e4683f18"
     },
     "web-sessions.md": {
       "modified": "2026-10-19T21:56:37Z",
