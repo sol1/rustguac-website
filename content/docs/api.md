@@ -98,6 +98,24 @@ The response includes the public key in the `banner_text` field. The SSH connect
 }
 ```
 
+**RDP session through an RD Gateway:**
+
+```json
+{
+  "session_type": "rdp",
+  "hostname": "workstation.internal",
+  "port": 3389,
+  "gateway_hostname": "gateway.example.com",
+  "gateway_port": 443,
+  "gateway_username": "alice",
+  "gateway_password": "gateway-secret",
+  "gateway_domain": "EXAMPLE",
+  "load_balance_info": "tsv://MS Terminal Services Plugin.1.Terminal"
+}
+```
+
+`gateway_port` defaults to 443. When a gateway is configured, the RDP target is resolved from the gateway side, so rustguac does not resolve or check the inner target against its local RDP allowlist. The gateway itself must resolve inside `rdp_allowed_networks` for every session. Fenced ad-hoc sessions pin the gateway connection to the IP address that passed the check; FreeRDP then checks the gateway certificate against that IP, so certificate name validation may fail unless `ignore_cert` is enabled. Saved entries and admin sessions retain the gateway hostname for certificate validation. RD Gateway cannot currently be combined with SSH jump hosts.
+
 **RDP session with Kerberos NLA:**
 
 ```json
@@ -212,6 +230,12 @@ The `jump_hosts` array defines an ordered chain of SSH bastion hops. Each hop co
 | `generate_keypair` | boolean | SSH | Generate an ephemeral Ed25519 keypair |
 | `url` | string | Web | Target URL for web browser session |
 | `domain` | string | RDP | Windows domain |
+| `gateway_hostname` | string | RDP | RD Gateway host |
+| `gateway_port` | integer | RDP | RD Gateway port (default 443) |
+| `gateway_username` | string | RDP | RD Gateway username |
+| `gateway_password` | string | RDP | RD Gateway password |
+| `gateway_domain` | string | RDP | RD Gateway domain |
+| `load_balance_info` | string | RDP | RDS Connection Broker load-balance cookie |
 | `security` | string | RDP | `tls`, `nla`, or `rdp` |
 | `server_layout` | string | RDP | Keyboard layout, a guacd keymap name such as `de-ch-qwertz` (see [keyboard layout](overview.md#keyboard-layout)). Default: guacd's, US English |
 | `ignore_cert` | boolean | RDP | Ignore TLS certificate errors |
@@ -223,6 +247,8 @@ The `jump_hosts` array defines an ordered chain of SSH bastion hops. Each hop co
 | `vnc_resize` | boolean | VNC | Ask the VNC server to resize its screen to the browser window (default `false`: the screen is scaled to fit). Only for servers with their own virtual screen (TigerVNC, Xvnc); a physical console such as UltraVNC, RealVNC or x11vnc can't resize, and the session stalls if asked. |
 | `vnc_network` | string | VNC | Network preset for the link between the VNC server and rustguac: `auto` (default), `lan`, `wan` or `slow`. See [VNC network presets](overview.md#vnc-network-presets). |
 | `enable_drive` | boolean | RDP, SSH | Enable file transfer / drive redirection |
+| `enable_printing` | boolean | RDP | Request printer redirection. The administrator must enable `rdp.allow_printing`; otherwise the request is ignored. Print PDFs are downloaded by default; setting `rdp.printing_method = "trigger_print"` opens the browser's local print dialog without displaying the PDF. This uses a separate RDP device and does not require drive file transfer. |
+| `printer_name` | string | RDP | Name shown for the redirected printer (used only when `enable_printing` is true) |
 | `disable_copy` | boolean | All | Disable clipboard copy (server → client) |
 | `disable_paste` | boolean | All | Disable clipboard paste (client → server) |
 | `autofill` | string | Web | JSON array of autofill credentials (see below) |
@@ -650,6 +676,12 @@ Create a connection entry. The body includes a `name` field plus all entry field
 | `private_key` | string | SSH | OpenSSH PEM private key |
 | `url` | string | Web | Target URL |
 | `domain` | string | RDP | Windows domain |
+| `gateway_hostname` | string | RDP | RD Gateway host |
+| `gateway_port` | integer | RDP | RD Gateway port (default 443) |
+| `gateway_username` | string | RDP | RD Gateway username |
+| `gateway_password` | string | RDP | RD Gateway password |
+| `gateway_domain` | string | RDP | RD Gateway domain |
+| `load_balance_info` | string | RDP | RDS Connection Broker load-balance cookie |
 | `security` | string | RDP | Security mode |
 | `server_layout` | string | RDP | Keyboard layout, a guacd keymap name such as `de-ch-qwertz`. Empty uses the connecting user's own layout if they have set one, otherwise guacd's default (US English) |
 | `ignore_cert` | boolean | RDP | Ignore certificate errors |
