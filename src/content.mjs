@@ -17,7 +17,7 @@ const GH = "https://github.com/sol1/rustguac";
 // matches the synced release's major.minor, so it never advertises an older release.
 export const release = {
   version: "1.14",
-  headline: "Custom roles built from permissions, and Vault Agent token files",
+  headline: "Custom roles, favourites, RD Gateway and RDP printing",
 };
 
 /* Home page highlight cards (6-8). */
@@ -83,7 +83,9 @@ export const protocols = [
     text: "Windows and Linux desktops with auto-fit resize, from plain password logins to Kerberos and RemoteApp.",
     bullets: [
       "Kerberos NLA authentication, domain logins and security mode settings",
-      "RemoteApp (RAIL) and Wake-on-LAN per entry",
+      "RemoteApp (RAIL), Wake-on-LAN and the console (admin) session per entry",
+      "RD Gateway and RDS Connection Broker load balancing",
+      "Printer redirection, each print job arriving in the browser as a PDF",
       "23 keyboard layouts, set on the connection or once for yourself under My keyboard layout",
       "H.264 passthrough and the GFX pipeline for smooth video",
       "Drive redirection with optional LUKS-encrypted per-session storage",
@@ -181,7 +183,7 @@ export const featureGroups = [
       {
         icon: "workflow",
         title: "Group-to-role mappings",
-        text: "A user gets every role their OIDC groups map to, and a mapping change applies straight away. Manage mappings in the Admin page, the API or with rustguac map-group.",
+        text: "A user gets every role their OIDC groups map to, and a mapping change applies straight away. Turn on sync_role_on_login to reset users with no mapped group to the default role.",
         doc: "/docs/roles-and-access-control/#group-to-role-mappings-1",
       },
       {
@@ -199,7 +201,7 @@ export const featureGroups = [
       {
         icon: "ticket",
         title: "API keys and user tokens",
-        text: "SHA-256 hashed admin API keys with IP allowlists and expiry, plus rgu_-prefixed personal tokens capped at a built-in or custom role and fully audited.",
+        text: "SHA-256 hashed API keys with IP allowlists and expiry, each full admin or limited to one role, plus rgu_-prefixed personal tokens capped at a role and fully audited.",
         doc: "/docs/roles-and-access-control/#user-api-tokens-1",
       },
     ],
@@ -281,6 +283,12 @@ export const featureGroups = [
         title: "Kerberos NLA for RDP",
         text: "Authenticate RDP sessions with Kerberos, configured per entry, with three ways to discover the KDC.",
         doc: "/docs/integrations/#rdp-kerberos-nla-authentication",
+      },
+      {
+        icon: "network",
+        title: "RD Gateway",
+        text: "New in 1.14.5: reach RDP hosts through a Remote Desktop Gateway, with RDS Connection Broker load balancing. The gateway is checked against rdp_allowed_networks.",
+        doc: "/docs/api/#post-apisessions",
       },
       {
         icon: "server",
@@ -402,7 +410,7 @@ export const featureGroups = [
       {
         icon: "monitor",
         title: "Live thumbnails",
-        text: "An Active Sessions section shows previews refreshed every 10 seconds, including dormant VDI desktops. Click one to reconnect.",
+        text: "The Active Sessions panel on Connections shows previews refreshed every 10 seconds, including dormant VDI desktops. Click one to reconnect, or end them all with Terminate all.",
         doc: "/docs/vdi/#active-sessions",
       },
       {
@@ -533,6 +541,12 @@ export const featureGroups = [
         title: "Themes",
         text: "Eight built-in presets, per-colour overrides and your own logo in config.toml, or drop in a .toml theme with no recompile.",
         doc: "/docs/themes/#built-in-presets",
+      },
+      {
+        icon: "star",
+        title: "Favourites",
+        text: "Star an entry from any folder and it appears under Favourites at the top of Connections. Favourites are per user and follow you between browsers.",
+        doc: "/docs/api/#favourites",
       },
       {
         icon: "copy",
@@ -671,7 +685,11 @@ export const faqs = [
   },
   {
     q: "How do I install rustguac with Docker?",
-    a: `Run <code>docker run -d -p 8089:8089 sol1/rustguac:latest</code>, then read the one-time admin API key from the container logs. The image bundles guacd, uses TLS between rustguac and guacd, and serves HTTP on port 8089, so put a reverse proxy in front for HTTPS. To keep your settings, bind-mount a <code>config.toml</code> to <code>/opt/rustguac/config.toml</code>. Web browser sessions also need the seccomp profile shipped in the image (<code>--security-opt seccomp=seccomp-chromium.json</code>), because Docker's default profile blocks Chromium's sandbox; see <a href="/docs/web-sessions/#running-under-docker">running under Docker</a>. The <a href="/docs/installation/#docker-compose-example">installation guide</a> has a Docker Compose example with volumes for data and recordings.`,
+    a: `Run <code>docker run -d -p 8089:8089 sol1/rustguac:latest</code>, then read the one-time admin API key from the container logs. The image bundles guacd and serves HTTPS on port 8089 with a self-signed certificate each container generates on first start; put a volume on <code>/opt/rustguac/tls</code> to keep it, mount your own certificate there, or put a reverse proxy in front. The same image is on <code>ghcr.io/sol1/rustguac</code>. To keep your settings, bind-mount a <code>config.toml</code> to <code>/opt/rustguac/config.toml</code>. Web browser sessions also need the seccomp profile shipped in the image (<code>--security-opt seccomp=seccomp-chromium.json</code>), because Docker's default profile blocks Chromium's sandbox; see <a href="/docs/web-sessions/#running-under-docker">running under Docker</a>. The <a href="/docs/installation/#docker-compose-example">installation guide</a> has a Docker Compose example with volumes for data and recordings.`,
+  },
+  {
+    q: "Do I need to do anything about the Docker image TLS key advisory?",
+    a: `Only if you run the Docker image from before 1.14.4 and serve HTTPS from it, rather than behind a reverse proxy that terminates TLS. Those images shipped one TLS private key built into the image, the same for every container and readable by anyone who could pull it (<a href="${GH}/security/advisories/GHSA-j4r4-h9h8-fj4v">GHSA-j4r4-h9h8-fj4v</a>). Upgrade and stop trusting the old certificate. A container created from 1.14.4 or later generates its own pair on first start; if you keep a volume on <code>/opt/rustguac/tls</code>, delete <code>cert.pem</code> and <code>key.pem</code> in it and restart. The Debian package and <code>install.sh</code> are not affected. See <a href="/docs/installation/#tls-certificate">TLS certificate</a>.`,
   },
   {
     q: "Can I run rustguac with Docker Compose or Kubernetes?",
@@ -708,6 +726,10 @@ export const faqs = [
   {
     q: "What happens to a session when my laptop sleeps or my network changes?",
     a: `Since 1.13.5, rustguac pings the browser every 15 seconds and ends the session once it has heard nothing at all for 45 seconds, so a vanished browser no longer stays Active for half an hour or counts against your session limit. Browsers answer these pings in background tabs too, so an idle or hidden session is not affected. Session limits are <code>max_sessions</code> (500 by default) and <code>max_sessions_per_user</code> (50), and only pending and active sessions count towards either. A VDI desktop keeps its container, so you can reconnect to it.`,
+  },
+  {
+    q: "Why do AltGr characters like @ or \\ type the wrong key over RDP?",
+    a: `Usually because the connection's keyboard layout is set to US. Before 1.14.2, saving an RDP entry for any reason reset its layout to US, so check entries that should use another layout and set it again, or set your own under <strong>Settings &gt; My keyboard layout</strong>. On Windows, rustguac 1.14.3 also fixed AltGr characters arriving with Ctrl and Alt held, so the server saw a shortcut instead of the character. See <a href="/docs/overview/#keyboard-layout">keyboard layout</a>.`,
   },
   {
     q: "Which browsers does rustguac support?",
@@ -763,7 +785,7 @@ export const quickstart = [
       "# First start prints a one-time admin API key",
       "docker logs rustguac",
     ].join("\n"),
-    note: "Serves HTTP on port 8089, so put a reverse proxy in front for HTTPS. Bind-mount config.toml to /opt/rustguac/config.toml to keep settings. For VDI, also mount /var/run/docker.sock and add the docker group.",
+    note: "Serves HTTPS on port 8089 with a self-signed certificate generated on first start: put a volume on /opt/rustguac/tls to keep it, or mount your own there. Also on ghcr.io/sol1/rustguac. Bind-mount config.toml to /opt/rustguac/config.toml to keep settings. For VDI, also mount /var/run/docker.sock and add the docker group.",
   },
   {
     id: "deb",
