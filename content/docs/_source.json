@@ -1,22 +1,22 @@
 {
   "repo": "sol1/rustguac",
-  "ref": "v1.14.5",
-  "commit": "dab43bdf006534abb995741fb41fb241fbcc7212",
-  "version": "1.14.5",
-  "releaseDate": "2026-11-18T20:58:53Z",
-  "syncedAt": "2026-11-18T21:57:58.842Z",
+  "ref": "v1.15.2",
+  "commit": "a49513dcb989b26fbf388237ea1fc5fedef6411c",
+  "version": "1.15.2",
+  "releaseDate": "2026-11-20T05:40:42Z",
+  "syncedAt": "2026-11-20T12:54:50.442Z",
   "files": {
     "api.md": {
-      "modified": "2026-11-18T20:39:37Z",
-      "sha256": "ee995f6cc312571a"
+      "modified": "2026-11-20T05:25:04Z",
+      "sha256": "5c74b6e3f8175f7a"
     },
     "configuration.md": {
-      "modified": "2026-11-18T20:39:37Z",
-      "sha256": "17011983454c8ed9"
+      "modified": "2026-11-20T05:25:04Z",
+      "sha256": "0d5753f8b9c8f450"
     },
     "credential-variables.md": {
-      "modified": "2026-10-19T21:54:46Z",
-      "sha256": "0a744717b6e83187"
+      "modified": "2026-11-20T05:18:26Z",
+      "sha256": "f7ee4cb0e049820d"
     },
     "deployment-guide.md": {
       "modified": "2026-11-16T22:49:31Z",
@@ -27,20 +27,20 @@
       "sha256": "b066897cda9fb3b7"
     },
     "integrations.md": {
-      "modified": "2026-11-18T20:39:37Z",
-      "sha256": "29c1cd30e5a3c534"
+      "modified": "2026-11-20T05:28:22Z",
+      "sha256": "5e0eddd708fc860a"
     },
     "migration.md": {
-      "modified": "2026-10-19T21:54:31Z",
-      "sha256": "7c26bc2b12f45734"
+      "modified": "2026-11-20T03:10:17Z",
+      "sha256": "acc5faebd8065e41"
     },
     "netbox.md": {
-      "modified": "2026-10-16T20:59:00Z",
-      "sha256": "331a9920b1cae2d3"
+      "modified": "2026-11-20T03:08:18Z",
+      "sha256": "96bd0de4bd991008"
     },
     "overview.md": {
-      "modified": "2026-11-18T20:39:37Z",
-      "sha256": "f13d2bae3fefdf83"
+      "modified": "2026-11-20T05:01:59Z",
+      "sha256": "f4bc7cb2f4cffc33"
     },
     "rdp-h264.md": {
       "modified": "2026-08-26T23:27:33Z",
@@ -59,8 +59,8 @@
       "sha256": "895870d6192992e8"
     },
     "roles-and-access-control.md": {
-      "modified": "2026-11-16T22:49:31Z",
-      "sha256": "efd8f337d8b42378"
+      "modified": "2026-11-20T03:13:35Z",
+      "sha256": "235a3295fff4877f"
     },
     "security.md": {
       "modified": "2026-10-19T21:54:46Z",
@@ -75,8 +75,8 @@
       "sha256": "26cf2f1ec083f571"
     },
     "vdi.md": {
-      "modified": "2026-11-16T22:52:43Z",
-      "sha256": "b1cfa5b7e4683f18"
+      "modified": "2026-11-20T04:44:27Z",
+      "sha256": "4a781de57f1bdaad"
     },
     "web-sessions.md": {
       "modified": "2026-10-19T21:56:37Z",
