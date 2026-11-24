@@ -39,7 +39,7 @@ const hero = `
       ${protoChips.map(([k, i, n]) => `<li><a href="#proto-${k}" data-proto="${k}">${icon(i, 16)}<span>${n}</span></a></li>`).join("")}
     </ul>
     <div class="hero-shot">
-      ${browserShot("connections", "rustguac Connections page with folders of SSH, RDP, VNC, web and VDI entries", { url: HOST, sizes: HERO_SIZES, fetchpriority: "high", label: "Enlarge: the Connections page" })}
+      ${browserShot("connections", "rustguac Connections page with Favourites, an Active sessions button and folders of SSH, RDP, web and multi-protocol entries", { url: HOST, sizes: HERO_SIZES, fetchpriority: "high", label: "Enlarge: the Connections page" })}
     </div>
   </div>
 </section>
@@ -172,8 +172,9 @@ const highlightsSection = `
 const screens = [
   { id: "ssh", label: "SSH session", d: "session-ssh", title: "A live SSH session", text: "A full terminal in the browser through guacd, with clipboard, SFTP file transfer and session controls in the side tabs." },
   { id: "websession", label: "Web session", d: "session-desktop", title: "A live web session", text: "Chromium runs on the server and streams into the browser, so internal web apps are reachable without exposing them." },
-  { id: "connections", label: "Connections", d: "connections", title: "Connections", text: "Folders of SSH, RDP, VNC, SPICE, Proxmox, web and VDI entries, shown only to the OIDC groups and users each folder allows." },
-  { id: "editor", label: "RDP entry", d: "connection-editor-rdp", title: "Connection editor", text: "Every per-entry setting in one form, from security mode and Kerberos to H.264 and clipboard control. Credentials are stored in Vault." },
+  { id: "connections", label: "Connections", d: "connections", title: "Connections", text: "Folders of SSH, RDP, VNC, SPICE, Proxmox, web and VDI entries, with your favourites on top and live sessions one click away. Each folder shows only to the groups and users it allows." },
+  { id: "protocols", label: "Protocols", d: "connection-editor-protocols", title: "One entry, several protocols", text: "Host defaults that every protocol inherits, an access rule for the entry, and a tab for each protocol: RDP, SSH, a web UI and more for one machine." },
+  { id: "editor", label: "RDP entry", d: "connection-editor-rdp", title: "RDP settings", text: "RD Gateway and load balancing, security mode, keyboard layout, the console session and printer redirection, set per entry. Credentials are stored in Vault." },
   { id: "web", label: "Web entry", d: "connection-editor-web", title: "Web session entry", text: "Point Chromium at an internal app, restrict it to allowed domains and let it autofill credentials the user never sees." },
   { id: "vdi", label: "VDI entry", d: "connection-editor-vdi", title: "VDI desktop entry", text: "Pick the Docker image and set CPU, memory and idle limits for each user's desktop container." },
   { id: "tunnel", label: "Jump hosts", d: "ssh-tunnel", title: "Multi-hop SSH tunnels", text: "Chain bastions per entry, each hop with its own credentials, to reach targets on isolated networks." },

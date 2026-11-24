@@ -12,7 +12,7 @@ const GROUP = {
   recording: { icon: "film", short: "Recording", shot: "recording-player", alt: "Recording player playing back a session in the browser" },
   collaboration: { icon: "share", short: "Sharing", shot: "sessions", alt: "Sessions page with active sessions and share links" },
   "web-vdi": { icon: "container", short: "Web + VDI", shot: "connection-editor-vdi", alt: "VDI connection entry with image, CPU, memory and idle timeout settings" },
-  performance: { icon: "gauge", short: "RDP video", shot: "connection-editor-rdp", alt: "RDP connection entry with H.264 and display settings" },
+  performance: { icon: "gauge", short: "RDP video", shot: "connection-editor-rdp", alt: "RDP settings on a connection entry: RD Gateway, security, keyboard layout, console session and printer redirection" },
   operations: { icon: "workflow", short: "Operations", shot: "themes", alt: "The rustguac Connections page in four built-in themes: aurora, light, nord and jaguar" },
 };
 const meta = (g) => GROUP[g.id] || { icon: g.icon || "sparkles", short: g.short || g.title };
