@@ -16,8 +16,8 @@ const GH = "https://github.com/sol1/rustguac";
 // Headline for the latest release on the home page pill. It only shows while `version`
 // matches the synced release's major.minor, so it never advertises an older release.
 export const release = {
-  version: "1.14",
-  headline: "Custom roles, favourites, RD Gateway and RDP printing",
+  version: "1.15",
+  headline: "One entry with several protocols, access rules per entry, pre-connect scripts and folder moves",
 };
 
 /* Home page highlight cards (6-8). */
@@ -75,6 +75,7 @@ export const protocols = [
       "SFTP between the browser and the target, with no files stored on the rustguac server",
       "Optional plain-text typescript recording per connection",
       "Per-entry font size and terminal colours, and multi-hop jump hosts",
+      "A command to run instead of the login shell, such as psql through a bastion",
     ],
   },
   {
@@ -193,6 +194,12 @@ export const featureGroups = [
         doc: "/docs/roles-and-access-control/#folder-access-control",
       },
       {
+        icon: "shield",
+        title: "Entry and protocol access",
+        text: "New in 1.15: an entry, and each protocol on it, can narrow its folder's access to some groups or users. Enforced on the server in listings, search and connect.",
+        doc: "/docs/roles-and-access-control/#entry-and-protocol-access",
+      },
+      {
         icon: "user-check",
         title: "Only the users you add",
         text: "Set auto_create_users = false and only accounts an admin has added can sign in. Logins are bound to the provider's permanent subject, not just an email.",
@@ -250,7 +257,7 @@ export const featureGroups = [
       {
         icon: "layers",
         title: "Folder default credentials",
-        text: "A folder can lend a username, password, key or domain per session type to entries with none of their own, so imported or webhook-created entries connect straight away.",
+        text: "A folder can lend a username, password, key or domain per session type to entries with none of their own, and can cover entries whose $variables a user hasn't set.",
         doc: "/docs/credential-variables/#folder-default-credentials",
       },
     ],
@@ -533,7 +540,7 @@ export const featureGroups = [
       {
         icon: "history",
         title: "Import from Guacamole",
-        text: "import-guacamole reads a MySQL/MariaDB dump and writes SSH, RDP and VNC connections into Vault, with a dry run and token mapping.",
+        text: "import-guacamole reads a MySQL/MariaDB dump and writes SSH, RDP and VNC connections into Vault, including SSH commands, with a dry run and token mapping.",
         doc: "/docs/migration/#step-1-export-the-guacamole-database",
       },
       {
@@ -541,6 +548,18 @@ export const featureGroups = [
         title: "Themes",
         text: "Eight built-in presets, per-colour overrides and your own logo in config.toml, or drop in a .toml theme with no recompile.",
         doc: "/docs/themes/#built-in-presets",
+      },
+      {
+        icon: "layers",
+        title: "One entry, several protocols",
+        text: "New in 1.15: a single entry can offer RDP, SSH, a web UI and more for one machine, with defaults at the host level and credentials resolved per protocol.",
+        doc: "/docs/api/#multi-protocol-entries",
+      },
+      {
+        icon: "zap",
+        title: "Pre-connect scripts",
+        text: "Run an approved script before connecting, for example to power on a VM through its provider's API. It gets the connection's details, never its credentials.",
+        doc: "/docs/integrations/#pre-connect-scripts",
       },
       {
         icon: "star",
@@ -551,7 +570,7 @@ export const featureGroups = [
       {
         icon: "copy",
         title: "Bulk move, copy and delete",
-        text: "Re-file many entries at once with credentials kept intact, from the UI or POST /api/addressbook/bulk, all recorded in the address book audit log.",
+        text: "Re-file many entries at once, or move a whole folder with its subfolders, access rules and default credentials. Credentials stay intact and every change is audited.",
         doc: "/docs/api/#post-apiaddressbookbulk-admin",
       },
     ],
@@ -706,6 +725,10 @@ export const faqs = [
   {
     q: "Can I let someone manage connections without making them an admin?",
     a: `Yes, with a custom role, new in rustguac 1.14. Under <strong>Admin &gt; Roles</strong>, start from the <strong>Connection editor</strong> template to manage connections in every folder without folder access settings, reports, recordings or admin, or from <strong>Connect only</strong> for contractors who should only see the folders they're given. Custom roles work on users, in OIDC group mappings and as API token caps, and nobody can grant a permission they don't hold. The four built-in roles are unchanged, so nothing needs doing on upgrade. See <a href="/docs/roles-and-access-control/#custom-roles">custom roles</a>.`,
+  },
+  {
+    q: "Can one connection entry offer RDP, SSH and a web UI for the same server?",
+    a: `Yes, since rustguac 1.15. An entry can list several protocols for one machine. The host level holds the defaults, each protocol inherits what it doesn't set, and the first is the primary. Credentials resolve per protocol, then the host, then the folder defaults for that type, then credential variables. The entry and each protocol can also narrow who may use them. Existing single-protocol entries keep working unchanged. If several rustguac instances share a Vault, upgrade all of them before anyone adds a second protocol or an access rule to an entry, because older versions skip entries stored in the new form. See <a href="/docs/migration/#multi-protocol-entries">multi-protocol entries</a> and <a href="/docs/roles-and-access-control/#entry-and-protocol-access">entry and protocol access</a>.`,
   },
   {
     q: "Why does rustguac say my identity provider has not verified my email address?",
