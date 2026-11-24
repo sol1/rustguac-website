@@ -1,14 +1,14 @@
 {
   "repo": "sol1/rustguac",
-  "ref": "v1.15.2",
-  "commit": "a49513dcb989b26fbf388237ea1fc5fedef6411c",
-  "version": "1.15.2",
-  "releaseDate": "2026-11-20T05:40:42Z",
-  "syncedAt": "2026-11-20T12:54:50.442Z",
+  "ref": "v1.15.3",
+  "commit": "76d044bb6e913b0b27ee9cd7edb69c174d186f65",
+  "version": "1.15.3",
+  "releaseDate": "2026-11-23T23:04:38Z",
+  "syncedAt": "2026-11-24T00:52:36.323Z",
   "files": {
     "api.md": {
-      "modified": "2026-11-20T05:25:04Z",
-      "sha256": "5c74b6e3f8175f7a"
+      "modified": "2026-11-23T22:46:24Z",
+      "sha256": "d48cdaa6a2c1278c"
     },
     "configuration.md": {
       "modified": "2026-11-20T05:25:04Z",
@@ -59,8 +59,8 @@
       "sha256": "895870d6192992e8"
     },
     "roles-and-access-control.md": {
-      "modified": "2026-11-20T03:13:35Z",
-      "sha256": "235a3295fff4877f"
+      "modified": "2026-11-23T22:46:24Z",
+      "sha256": "842953a5885d0f91"
     },
     "security.md": {
       "modified": "2026-10-19T21:54:46Z",
